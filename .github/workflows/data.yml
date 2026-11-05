@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/data.yml", "discover.js"]
 permissions:
   contents: write
 concurrency:
