@@ -1,0 +1,33 @@
+name: Refresh declarations
+# Saves a copy of the public declarations every 15 minutes, so the page can show the numbers instantly.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: data
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download the public declarations
+        run: |
+          curl -sSL --fail --max-time 60 "https://script.google.com/macros/s/AKfycbzi98yaZhJXp2e9ynxOlj9KSGyVtNxiM-W_R50A6ko2cEglRBHm8h5pWBl5loCAzbjj0w/exec" -o new.json
+          n=$(jq '.declarations | length' new.json)
+          echo "declarations: $n"
+          test "$n" -gt 100
+          jq -c '{declarations: .declarations}' new.json > data.json
+          rm new.json
+      - name: Save if anything changed
+        run: |
+          if git diff --quiet -- data.json && git ls-files --error-unmatch data.json >/dev/null 2>&1; then echo "no change"; exit 0; fi
+          git config user.name "wop-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Refresh declarations"
+          git push
