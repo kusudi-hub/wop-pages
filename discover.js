@@ -27,7 +27,7 @@ const PEOPLE = []; // [first name, purpose, count only] aligned with SEED.d, nul
 const DATA_URL = "https:\/\/script.google.com/macros/s/AKfycbzi98yaZhJXp2e9ynxOlj9KSGyVtNxiM-W_R50A6ko2cEglRBHm8h5pWBl5loCAzbjj0w/exec";
 const HOOK_URL = "";   // Apps Script webhook (sheet + counter)
 const GHL_HOOK = "https:\/\/services.leadconnectorhq.com/hooks/MdZ50IhWXgrl5BTf4stH/webhook-trigger/4d518717-4f7e-4de5-b986-48132da1a310";   // GHL inbound webhook workflow (contact + emails)
-const JOIN_URL = "https://worldofpurpose.com/alignment-join";   // Alignment sales page, shown after someone declares
+const JOIN_URL = "https://join.worldofpurpose.com/alignment";   // Alignment sales page, shown after someone declares
 const GOAL = 1000;
 const PREVIEW = "1" === "1" ? false : !/worldofpurpose\.com$/.test(location.hostname);
 const ISO = {"United States":"US","United Kingdom":"GB","Canada":"CA","Nigeria":"NG","Mexico":"MX","South Africa":"ZA","Netherlands":"NL","Germany":"DE","Kenya":"KE","Trinidad and Tobago":"TT","Ghana":"GH","Australia":"AU","Barbados":"BB","Philippines":"PH","Jamaica":"JM","India":"IN","Serbia":"RS","Thailand":"TH","Austria":"AT","Spain":"ES","Tanzania":"TZ","Rwanda":"RW","Greece":"GR","New Zealand":"NZ","Martinique":"MQ","Aruba":"AW","United Arab Emirates":"AE","Indonesia":"ID","Costa Rica":"CR","Cape Verde":"CV","Ireland":"IE","Botswana":"BW","Ukraine":"UA","Denmark":"DK","Israel":"IL","Panama":"PA","Slovenia":"SI","Italy":"IT","South Korea":"KR","Finland":"FI","France":"FR","Brazil":"BR","Colombia":"CO","Japan":"JP","China":"CN","Egypt":"EG","Ethiopia":"ET","Uganda":"UG","Zimbabwe":"ZW","Haiti":"HT","Dominican Republic":"DO","Puerto Rico":"PR","Bahamas":"BS","Belgium":"BE","Sweden":"SE","Norway":"NO","Switzerland":"CH","Portugal":"PT","Poland":"PL","Morocco":"MA","Senegal":"SN","Singapore":"SG","Malaysia":"MY","Pakistan":"PK","Bangladesh":"BD","Vietnam":"VN","Argentina":"AR","Chile":"CL","Peru":"PE","Ecuador":"EC","Guatemala":"GT","Belize":"BZ","Bermuda":"BM","Cayman Islands":"KY","Saint Lucia":"LC","Grenada":"GD","Guyana":"GY","Saudi Arabia":"SA","Qatar":"QA","Turkey":"TR","Russia":"RU"};
@@ -592,7 +592,7 @@ $("#declare-form").addEventListener("submit", ev => {
 </svg></div></div>
     <p style="max-width:44ch">Your light is on the map. Your line goes on the wall after a quick review. Welcome to the movement.</p>
     <p style="max-width:44ch"><b>You declared it. Now live it.</b> Alignment is the room where you live your purpose with Kusudi and people walking the same road. Pay what you can.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-forest" href="${JOIN_URL}">Join Alignment</a><a class="btn" style="background:none;color:var(--forest);box-shadow:inset 0 0 0 2px var(--forest)" href="#wall">Find yourself on the wall</a></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-forest" href="${JOIN_URL}?name=${encodeURIComponent(rec.first || "")}&declaration=${encodeURIComponent(rec.purpose || "")}">Join Alignment</a><a class="btn" style="background:none;color:var(--forest);box-shadow:inset 0 0 0 2px var(--forest)" href="#wall">Find yourself on the wall</a></div>
     ${PREVIEW ? `<p class="preview-note">Preview only. This test declaration stays in your browser and was not sent anywhere.</p>` : ""}
   </div>`;
 });
