@@ -577,7 +577,7 @@ $("#declare-form").addEventListener("submit", ev => {
     // GHL only accepts JSON or form data, so send it as form data (works from any page)
     if (GHL_HOOK && GHL_HOOK.indexOf("http") === 0) fetch(GHL_HOOK, {method:"POST", mode:"no-cors", keepalive:true, body: new URLSearchParams(JSON.parse(payload))}).catch(()=>{});
   }
-  try { localStorage.setItem("wopDeclared", JSON.stringify({first: rec.first, purpose, at: rec.at})); } catch(e){}
+  try { localStorage.setItem("wopDeclared", JSON.stringify({first: name.split(/\s+/)[0], purpose, at: rec.at})); } catch(e){}
   rec.k = rows.length; rows.push(rec); aggregate();
   if (rec.lat != null){ newest = [rec]; selected = AGG.places.find(p => p.people.includes(rec)); spotP = rec; }
   renderNumbers(true); renderFeed(); renderPanel(); renderWall(); requestDraw();
