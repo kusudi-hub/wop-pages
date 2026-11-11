@@ -447,7 +447,7 @@ html.embedded .pmodal-card{max-height:560px;margin-top:var(--pm-top,120px)}
         </div>
         <fieldset class="choices">
           <legend>What next?</legend>
-          <label class="choice"><input type="radio" name="next" id="f-join" value="join" checked><span><b>Join the community, free</b>Teachings, invitations and updates, including emails.</span></label>
+          <label class="choice"><input type="radio" name="next" id="f-join" value="join" checked><span><b>Keep me in the loop</b>Teachings, invitations and updates, including emails.</span></label>
           <label class="choice"><input type="radio" name="next" id="f-count" value="count"><span><b>Only count my purpose</b>No community and no emails.</span></label>
         </fieldset>
         <p class="err" data-err hidden></p>
@@ -615,6 +615,7 @@ const PEOPLE = __PEOPLE__; // [first name, purpose, count only] aligned with SEE
 const DATA_URL = "__DATA_URL__";
 const HOOK_URL = "__HOOK_URL__";   // Apps Script webhook (sheet + counter)
 const GHL_HOOK = "__GHL_HOOK__";   // GHL inbound webhook workflow (contact + emails)
+const JOIN_URL = "https://worldofpurpose.com/alignment-join";   // Alignment sales page, shown after someone declares
 const GOAL = 1000;
 const PREVIEW = "__FORCE_LIVE__" === "1" ? false : !/worldofpurpose\.com$/.test(location.hostname);
 const ISO = __ISO__;
@@ -1163,6 +1164,7 @@ $("#declare-form").addEventListener("submit", ev => {
     // GHL only accepts JSON or form data, so send it as form data (works from any page)
     if (GHL_HOOK && GHL_HOOK.indexOf("http") === 0) fetch(GHL_HOOK, {method:"POST", mode:"no-cors", keepalive:true, body: new URLSearchParams(JSON.parse(payload))}).catch(()=>{});
   }
+  try { localStorage.setItem("wopDeclared", JSON.stringify({first: rec.first, purpose, at: rec.at})); } catch(e){}
   rec.k = rows.length; rows.push(rec); aggregate();
   if (rec.lat != null){ newest = [rec]; selected = AGG.places.find(p => p.people.includes(rec)); spotP = rec; }
   renderNumbers(true); renderFeed(); renderPanel(); renderWall(); requestDraw();
@@ -1174,7 +1176,8 @@ $("#declare-form").addEventListener("submit", ev => {
     <div class="sharecard"><div><div class="mpi-line">My purpose is</div><div class="box2">${esc(cut(purpose,220))}</div></div>
     <div class="foot"><span>#${fmt(rows.length)} of ${fmt(GOAL)}${rec.city ? " · " + esc(rec.city) : ""}</span>__WORDMARK_SMALL__</div></div>
     <p style="max-width:44ch">Your light is on the map. Your line goes on the wall after a quick review. Welcome to the movement.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-forest" href="#wall">Find yourself on the wall</a></div>
+    <p style="max-width:44ch"><b>You declared it. Now live it.</b> Alignment is the room where you live your purpose with Kusudi and people walking the same road. Pay what you can.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-forest" href="${JOIN_URL}">Join Alignment</a><a class="btn" style="background:none;color:var(--forest);box-shadow:inset 0 0 0 2px var(--forest)" href="#wall">Find yourself on the wall</a></div>
     ${PREVIEW ? `<p class="preview-note">Preview only. This test declaration stays in your browser and was not sent anywhere.</p>` : ""}
   </div>`;
 });
