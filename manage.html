@@ -319,6 +319,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fo
     $("nextLine").innerHTML = "You are in on a scholarship. Nothing is charged, and nothing renews. You have the same access as everyone else.";
     $("changeCard").classList.add("hide");
     $("cancelOpen").classList.add("hide");
+    var sl = $("scholarLine"); if(sl){ sl.classList.add("hide"); }
     var card = $("cardBtn").parentNode;
     card.querySelector("h2").textContent = "If you ever want to start giving";
     card.querySelector(".meta").textContent = "There is no expectation here and no deadline. If the day comes that you want to put something in, you pick the amount, starting at $5.11 every 30 days.";
