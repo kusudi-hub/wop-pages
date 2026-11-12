@@ -584,7 +584,7 @@ $("#declare-form").addEventListener("submit", ev => {
   renderNumbers(true); renderFeed(); renderPanel(); renderWall(); requestDraw();
   scrollToEl(ROOT.querySelector(".stats"));
   const slot = $("[data-form-slot]");
-  const goUrl = `${JOIN_URL}?name=${encodeURIComponent(rec.first || "")}&declaration=${encodeURIComponent(rec.purpose || "")}`;
+  const goUrl = `${JOIN_URL}?name=${encodeURIComponent((rec.first || "").split(/\s+/)[0])}&declaration=${encodeURIComponent(rec.purpose || "")}`;
   const autoGo = !PREVIEW && (f.get("next") || "join") === "join";
   slot.innerHTML = `<div class="done">
     <span class="rank">You are #${fmt(rows.length)}</span>
