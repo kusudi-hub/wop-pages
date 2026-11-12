@@ -250,9 +250,29 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
     show("view");
   }
 
+  function paintLimited(d){
+    var first = (d.name || "").trim().split(/\s+/)[0];
+    $("hello").textContent = first ? first + ", here is your membership." : "Your Alignment membership.";
+    $("curAmount").textContent = money(d.saved_amount || 0);
+    $("statePill").className = "pill";
+    $("stateText").textContent = (d.saved_state === "ending") ? "Ending" : "Active";
+    $("nextLine").textContent = "Charged every 30 days.";
+    $("changeCard").classList.add("hide");
+    $("cancelOpen").classList.add("hide");
+    $("cardBtn").href = "mailto:kusudi@worldofpurpose.com?subject=My%20Alignment%20membership";
+    $("cardBtn").removeAttribute("target");
+    $("cardBtn").textContent = "Write to us";
+    var card = $("cardBtn").parentNode;
+    card.querySelector("h2").textContent = "Changes";
+    card.querySelector(".meta").textContent = "To change what you give, update your card, or stop, write to us and it gets handled the same day.";
+    card.querySelector(".note").textContent = "Self serve changes are switching on shortly.";
+    show("view");
+  }
+
   function load(){
     post({action:"status", k:k}).then(function(d){
       if(d && d.status === "ok"){ paint(d); }
+      else if(d && d.email){ paintLimited(d); }
       else { askMode("That link is not working.", "Links are one at a time, so the newest one is the one that works. Enter your email and we will send a fresh one."); }
     }).catch(function(){
       askMode("We could not reach your membership.", "Enter your email and we will send you a fresh link.");
