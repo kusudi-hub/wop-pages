@@ -309,9 +309,31 @@ input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fo
     show("view");
   }
 
+  function paintScholarship(d){
+    var first = (d.name || "").trim().split(/\s+/)[0];
+    $("hello").textContent = first ? first + ", here is your membership." : "Your Alignment membership.";
+    $("curAmount").parentNode.classList.add("hide");
+    $("perDay").textContent = "";
+    $("statePill").className = "pill";
+    $("stateText").textContent = "Scholarship";
+    $("nextLine").innerHTML = "You are in on a scholarship. Nothing is charged, and nothing renews. You have the same access as everyone else.";
+    $("changeCard").classList.add("hide");
+    $("cancelOpen").classList.add("hide");
+    var card = $("cardBtn").parentNode;
+    card.querySelector("h2").textContent = "If you ever want to start giving";
+    card.querySelector(".meta").textContent = "There is no expectation here and no deadline. If the day comes that you want to put something in, you pick the amount, starting at $5.11 every 30 days.";
+    card.querySelector(".note").textContent = "You can also write to kusudi@worldofpurpose.com any time, about anything.";
+    $("cardBtn").href = JOIN;
+    $("cardBtn").setAttribute("target", "_blank");
+    $("cardBtn").textContent = "Start giving";
+    show("view");
+  }
+
   function load(){
     post({action:"status", k:k}).then(function(d){
-      if(d && d.status === "ok"){ paint(d); }
+      if(d && d.state === "scholarship"){ paintScholarship(d); }
+      else if(d && d.status === "ok"){ paint(d); }
+      else if(d && d.saved_state === "scholarship"){ paintScholarship(d); }
       else if(d && d.email){ paintLimited(d); }
       else { askMode("That link is not working.", "Links are one at a time, so the newest one is the one that works. Enter your email and we will send a fresh one."); }
     }).catch(function(){
