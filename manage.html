@@ -52,7 +52,19 @@ input[type=number],input[type=email]{
 }
 input[type=number]{width:150px;font-variant-numeric:tabular-nums}
 input:focus{outline:2px solid var(--sage);outline-offset:1px}
-input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:6px 0 2px;cursor:pointer}
+input[type=range]:focus{outline:none}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(to right,var(--sage) 0 var(--fill,0%),rgba(46,63,50,.16) var(--fill,0%) 100%)}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:rgba(46,63,50,.16)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--sage)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--paper);border:5px solid var(--sage);margin-top:-9px;box-shadow:0 2px 8px rgba(28,42,32,.3)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--paper);border:5px solid var(--sage);box-shadow:0 2px 8px rgba(28,42,32,.3)}
+input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--forest);outline-offset:2px}
+.perday{display:block;font-family:var(--ui);font-size:15px;color:var(--sage);margin:4px 0 0}
+.livepay{font-family:var(--ui);font-size:15px;color:var(--soft);margin:0 0 16px;min-height:21px}
+.livepay b{color:var(--forest);font-weight:500}
+.scholar-line{font-family:var(--ui);font-size:14.5px;color:var(--soft);margin:18px 0 0;text-align:center;line-height:1.6}
+.scholar-line a{color:var(--forest);font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .scale{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;color:var(--sage);margin:0 0 20px}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
@@ -125,7 +137,8 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
     <div class="card">
       <div id="statePill" class="pill"><i></i><span id="stateText">Active</span></div>
       <div class="amount"><b id="curAmount">0</b><i>every 30 days</i></div>
-      <p class="meta" id="nextLine"></p>
+      <span class="perday" id="perDay"></span>
+      <p class="meta" id="nextLine" style="margin-top:10px"></p>
     </div>
 
     <div class="card" id="changeCard">
@@ -136,6 +149,7 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
       </div>
       <input type="range" id="amtRange" min="511" max="51100" step="1">
       <div class="scale"><span>$5.11</span><span>$511</span></div>
+      <p class="livepay" id="livePay"></p>
       <button class="btn" id="saveBtn">Save this amount</button>
       <div id="saveMsg"></div>
       <p class="note">Lowering takes effect on your next charge. Nothing is charged today.</p>
@@ -147,6 +161,10 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
       <a class="btn ghost" id="cardBtn" href="#" target="_blank" rel="noopener">Update my card</a>
       <p class="note">This opens Whop, who handle the payment. They will email you a code to sign in.</p>
     </div>
+
+    <p class="scholar-line" id="scholarLine">Can't do $5.11 right now?
+      <a href="https://join.worldofpurpose.com/alignment#join">Apply for a free scholarship</a>.
+      Money should never be the reason you stay stuck.</p>
 
     <div style="text-align:center">
       <button class="btn quiet" id="cancelOpen">I need to stop my membership</button>
@@ -178,6 +196,23 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
 
   function money(n){
     return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function perDay(n){
+    var d = Number(n) / 30;
+    if(!isFinite(d) || d <= 0) return "";
+    return d < 1 ? "About " + Math.round(d * 100) + " cents a day" : "About $" + d.toFixed(2) + " a day";
+  }
+
+  function setFill(){
+    var el = $("amtRange");
+    var pct = (el.value - el.min) / (el.max - el.min) * 100;
+    el.style.setProperty("--fill", pct + "%");
+  }
+
+  function livePay(){
+    var n = parseFloat($("amtBox").value);
+    $("livePay").innerHTML = isNaN(n) ? "" : "<b>" + money(n) + "</b> every 30 days. " + perDay(n) + ".";
   }
 
   function when(v){
@@ -241,8 +276,12 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
       $("nextLine").innerHTML = date ? "Your next charge is <b>" + date + "</b>." : "Charged every 30 days.";
     }
 
+    $("perDay").textContent = perDay(current) + ".";
+
     $("amtBox").value = current.toFixed(2);
     $("amtRange").value = Math.round(current * 100);
+    setFill();
+    livePay();
 
     if(manageUrl){ $("cardBtn").href = manageUrl; }
     else { $("cardBtn").href = "mailto:kusudi@worldofpurpose.com?subject=Update%20my%20card"; $("cardBtn").removeAttribute("target"); }
@@ -254,6 +293,7 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
     var first = (d.name || "").trim().split(/\s+/)[0];
     $("hello").textContent = first ? first + ", here is your membership." : "Your Alignment membership.";
     $("curAmount").parentNode.classList.add("hide");
+    $("perDay").textContent = "";
     $("statePill").className = "pill";
     $("stateText").textContent = (d.saved_state === "ending") ? "Ending" : "Active";
     $("nextLine").textContent = "Your membership is active. We cannot show your exact amount on this page yet.";
@@ -285,17 +325,22 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
 
   $("amtRange").addEventListener("input", function(){
     $("amtBox").value = (this.value / 100).toFixed(2);
+    setFill();
+    livePay();
     $("saveMsg").innerHTML = "";
   });
   $("amtBox").addEventListener("input", function(){
     var n = parseFloat(this.value);
-    if(!isNaN(n)) $("amtRange").value = Math.round(clamp(n) * 100);
+    if(!isNaN(n)) { $("amtRange").value = Math.round(clamp(n) * 100); setFill(); }
+    livePay();
     $("saveMsg").innerHTML = "";
   });
   $("amtBox").addEventListener("blur", function(){
     var n = parseFloat(this.value);
     this.value = (isNaN(n) ? current : clamp(n)).toFixed(2);
     $("amtRange").value = Math.round(parseFloat(this.value) * 100);
+    setFill();
+    livePay();
   });
 
   $("saveBtn").addEventListener("click", function(){
@@ -322,6 +367,7 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
       if(d && d.status === "ok"){
         current = n;
         $("curAmount").textContent = money(current);
+        $("perDay").textContent = perDay(current) + ".";
         var date = when(d.renews_on);
         say($("saveMsg"), "Saved. You give " + money(current) + " from " + (date || "your next charge") + ".", true);
       } else {
