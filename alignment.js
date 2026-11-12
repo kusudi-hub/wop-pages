@@ -66,8 +66,15 @@
     }
     // Declaration wording: "The purpose of my life is"
     function wording() {
-      var pl = page.querySelector('label[for="alPurpose"]');
-      if (pl && pl.textContent !== 'The purpose of my life is') pl.textContent = 'The purpose of my life is';
+      // After payment nobody is asked to declare a purpose: drop that step, keep the email confirm that sends the Skool invite.
+      // (The old GoHighLevel script that required it now just logs a harmless error on submit and lets the invite go through.)
+      var ap = page.querySelector('#alPurpose');
+      if (ap) {
+        var row = ap.closest('.row'); if (row) row.remove(); else ap.remove();
+        var ac = page.querySelector('#alCount'); if (ac) ac.remove();
+        var cb = page.querySelector('#alConfirm'), cp = cb && cb.querySelector('h3 + p');
+        if (cp) cp.textContent = 'Your invite into the community goes to this email. Check it is right, then send it.';
+      }
       // Their declaration at the top reads as one full sentence
       var dq = page.querySelector('#declared q'), dt = dq && dq.textContent.trim();
       if (dt && !/^the purpose of my life is/i.test(dt)) {
