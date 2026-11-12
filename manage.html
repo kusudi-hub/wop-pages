@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Your Alignment membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#2E3F32; --pine:#1C2A20; --beige:#EEE3D7; --paper:#F7F5F1; --sage:#9DB39C;
+  --ink:#1C2A20; --soft:#5F7064; --line:rgba(46,63,50,.14);
+  --display:"Alfa Slab One","Rockwell","Roboto Slab",Georgia,serif;
+  --ui:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#FFFFFF;
+  background-image:radial-gradient(900px 520px at 88% -6%, rgba(157,179,156,.22), transparent 62%),
+                   radial-gradient(700px 520px at -8% 38%, rgba(157,179,156,.10), transparent 60%);
+  color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+.wrap{max-width:560px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-left,0px)) 72px}
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 34px}
+.brand svg{width:38px;height:38px;flex:none}
+.brand span{font-family:var(--ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--sage)}
+h1{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.2;margin:0 0 10px;color:var(--forest)}
+.lede{margin:0 0 28px;color:var(--soft)}
+.card{background:#F5F7F4;border:1px solid var(--line);border-radius:18px;padding:26px 22px;margin:0 0 18px;box-shadow:0 18px 40px -30px rgba(28,42,32,.35)}
+.card h2{font-family:var(--ui);font-weight:500;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin:0 0 16px}
+.amount{display:flex;align-items:baseline;gap:8px;margin:0 0 6px}
+.amount b{font-family:var(--display);font-weight:400;font-size:46px;line-height:1;color:var(--forest);font-variant-numeric:tabular-nums}
+.amount i{font-style:normal;font-family:var(--ui);font-size:15px;color:var(--soft)}
+.meta{margin:0;font-family:var(--ui);font-size:15px;color:var(--soft)}
+.meta b{color:var(--forest);font-weight:500}
+.pill{display:inline-flex;align-items:center;gap:7px;font-family:var(--ui);font-size:13px;padding:5px 12px;border-radius:999px;background:rgba(157,179,156,.22);color:var(--forest);margin:0 0 16px}
+.pill.warn{background:rgba(232,132,107,.18);color:#8A3F28}
+.pill i{width:7px;height:7px;border-radius:50%;background:#3F8F5A;flex:none}
+.pill.warn i{background:#E8846B}
+label{display:block;font-family:var(--ui);font-size:14px;color:var(--soft);margin:0 0 10px}
+.row{display:flex;align-items:center;gap:10px;margin:0 0 16px}
+.dollar{font-family:var(--display);font-size:26px;color:var(--forest);line-height:1}
+input[type=number],input[type=email]{
+  font-family:var(--ui);font-size:19px;color:var(--forest);background:#FFFFFF;
+  border:1px solid var(--line);border-radius:12px;padding:13px 14px;width:100%;
+}
+input[type=number]{width:150px;font-variant-numeric:tabular-nums}
+input:focus{outline:2px solid var(--sage);outline-offset:1px}
+input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6px}
+.scale{display:flex;justify-content:space-between;font-family:var(--ui);font-size:12px;color:var(--sage);margin:0 0 20px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  font-family:var(--ui);font-size:16px;font-weight:500;cursor:pointer;
+  background:var(--forest);color:var(--paper);border:0;border-radius:999px;padding:15px 24px;
+  text-decoration:none;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -14px rgba(28,42,32,.6)}
+.btn[disabled]{opacity:.5;cursor:default;transform:none;box-shadow:none}
+.btn.ghost{background:transparent;color:var(--forest);border:1px solid var(--line)}
+.btn.quiet{background:transparent;color:var(--soft);border:0;font-size:15px;padding:10px 0;width:auto}
+.btn.quiet:hover{transform:none;box-shadow:none;color:#8A3F28}
+.note{font-family:var(--ui);font-size:14px;color:var(--soft);margin:14px 0 0}
+.msg{font-family:var(--ui);font-size:15px;border-radius:12px;padding:13px 15px;margin:16px 0 0}
+.msg.ok{background:rgba(63,143,90,.12);color:#2A5F3C}
+.msg.bad{background:rgba(232,132,107,.16);color:#8A3F28}
+.foot{font-family:var(--ui);font-size:14px;color:var(--sage);text-align:center;margin:34px 0 0}
+.foot a{color:var(--soft)}
+.hide{display:none!important}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(247,245,241,.4);border-top-color:var(--paper);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.skel{height:120px;border-radius:18px;background:linear-gradient(90deg,#EFF2ED,#F7F9F6,#EFF2ED);background-size:200% 100%;animation:sk 1.2s ease-in-out infinite}
+@keyframes sk{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <svg viewBox="0 0 160 160" aria-hidden="true">
+      <circle cx="80" cy="80" r="76" fill="#EEE3D7"/>
+      <g fill="none" stroke="#2E3F32" stroke-width="11" stroke-linecap="round">
+        <path d="M 44 82 A 34 34 0 0 1 78 116"/>
+        <path d="M 44 56 A 60 60 0 0 1 104 116"/>
+        <path d="M 52 30 A 86 86 0 0 1 130 108"/>
+      </g>
+      <circle cx="44" cy="116" r="11" fill="#2E3F32"/>
+    </svg>
+    <span>World of Purpose</span>
+  </div>
+
+  <div id="loading">
+    <h1>Opening your membership.</h1>
+    <p class="lede">One moment.</p>
+    <div class="skel"></div>
+  </div>
+
+  <!-- Ask for a link -->
+  <div id="ask" class="hide">
+    <h1 id="askTitle">Find your membership.</h1>
+    <p class="lede" id="askLede">Enter the email you joined with. We will send your private link.</p>
+    <div class="card">
+      <h2>Your email</h2>
+      <form id="askForm" autocomplete="on">
+        <input type="email" id="askEmail" name="email" placeholder="you@example.com" required autocomplete="email">
+        <div style="height:16px"></div>
+        <button class="btn" type="submit" id="askBtn">Send my link</button>
+      </form>
+      <div id="askMsg"></div>
+    </div>
+    <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
+  </div>
+
+  <!-- The membership -->
+  <div id="view" class="hide">
+    <h1 id="hello">Your Alignment membership.</h1>
+    <p class="lede">Change what you give, update your card, or stop. It is yours to decide.</p>
+
+    <div class="card">
+      <div id="statePill" class="pill"><i></i><span id="stateText">Active</span></div>
+      <div class="amount"><b id="curAmount">0</b><i>every 30 days</i></div>
+      <p class="meta" id="nextLine"></p>
+    </div>
+
+    <div class="card" id="changeCard">
+      <h2>Change what you give</h2>
+      <div class="row">
+        <span class="dollar">$</span>
+        <input type="number" id="amtBox" min="5.11" max="511" step="0.01" inputmode="decimal">
+      </div>
+      <input type="range" id="amtRange" min="511" max="51100" step="1">
+      <div class="scale"><span>$5.11</span><span>$511</span></div>
+      <button class="btn" id="saveBtn">Save this amount</button>
+      <div id="saveMsg"></div>
+      <p class="note">Lowering takes effect on your next charge. Nothing is charged today.</p>
+    </div>
+
+    <div class="card">
+      <h2>Your card</h2>
+      <p class="meta" style="margin-bottom:16px">Update the card we charge every 30 days.</p>
+      <a class="btn ghost" id="cardBtn" href="#" target="_blank" rel="noopener">Update my card</a>
+      <p class="note">This opens Whop, who handle the payment. They will email you a code to sign in.</p>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn quiet" id="cancelOpen">I need to stop my membership</button>
+    </div>
+
+    <div class="card hide" id="cancelCard" style="margin-top:14px">
+      <h2>Stop my membership</h2>
+      <p class="meta" style="margin-bottom:18px">You keep everything until your current period ends. Nothing more is charged after that.</p>
+      <button class="btn" id="cancelYes">Yes, stop it</button>
+      <div style="height:10px"></div>
+      <button class="btn ghost" id="cancelNo">Keep my membership</button>
+      <div id="cancelMsg"></div>
+    </div>
+
+    <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var API = "https://hook.us2.make.com/695g1wji6q4rtb1bu5slqwb2y24rgdkr";
+  var JOIN = "https://join.worldofpurpose.com/alignment";
+  var MIN = 5.11, MAX = 511;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var k = new URLSearchParams(location.search).get("k") || "";
+  var current = 0, manageUrl = "", ending = false;
+
+  function money(n){
+    return "$" + Number(n).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function when(v){
+    if(!v) return "";
+    var d = /^\d+$/.test(String(v)) ? new Date(Number(v) * (String(v).length > 10 ? 1 : 1000)) : new Date(v);
+    if(isNaN(d.getTime())) return "";
+    return d.toLocaleDateString("en-US", {month:"long", day:"numeric", year:"numeric"});
+  }
+
+  function post(payload){
+    return fetch(API, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    }).then(function(r){ return r.json().catch(function(){ return {status:"error"}; }); });
+  }
+
+  function show(id){
+    ["loading","ask","view"].forEach(function(x){ $(x).classList.add("hide"); });
+    $(id).classList.remove("hide");
+  }
+
+  function say(box, text, good){
+    box.innerHTML = '<div class="msg ' + (good ? "ok" : "bad") + '">' + text + "</div>";
+  }
+
+  function busy(btn, on, label){
+    btn.disabled = on;
+    btn.innerHTML = on ? '<span class="spin"></span>' : label;
+  }
+
+  function askMode(title, lede){
+    if(title) $("askTitle").textContent = title;
+    if(lede) $("askLede").textContent = lede;
+    show("ask");
+  }
+
+  // ---- the membership view ----
+
+  function paint(d){
+    current = Number(d.amount || 0);
+    manageUrl = d.manage_url || "";
+    ending = d.ending === true || d.ending === "true";
+
+    var first = (d.name || "").trim().split(/\s+/)[0];
+    $("hello").textContent = first ? first + ", here is your membership." : "Your Alignment membership.";
+
+    $("curAmount").textContent = money(current);
+
+    var pill = $("statePill");
+    var date = when(d.renews_on);
+    if(ending){
+      pill.className = "pill warn";
+      $("stateText").textContent = "Ending";
+      $("nextLine").innerHTML = date ? "Your membership ends on <b>" + date + "</b>. Nothing more is charged." : "Your membership is set to end.";
+      $("changeCard").classList.add("hide");
+      $("cancelOpen").classList.add("hide");
+    } else {
+      pill.className = "pill";
+      $("stateText").textContent = d.state === "trialing" ? "Trial" : "Active";
+      $("nextLine").innerHTML = date ? "Your next charge is <b>" + date + "</b>." : "Charged every 30 days.";
+    }
+
+    $("amtBox").value = current.toFixed(2);
+    $("amtRange").value = Math.round(current * 100);
+
+    if(manageUrl){ $("cardBtn").href = manageUrl; }
+    else { $("cardBtn").href = "mailto:kusudi@worldofpurpose.com?subject=Update%20my%20card"; $("cardBtn").removeAttribute("target"); }
+
+    show("view");
+  }
+
+  function load(){
+    post({action:"status", k:k}).then(function(d){
+      if(d && d.status === "ok"){ paint(d); }
+      else { askMode("That link is not working.", "Links are one at a time, so the newest one is the one that works. Enter your email and we will send a fresh one."); }
+    }).catch(function(){
+      askMode("We could not reach your membership.", "Enter your email and we will send you a fresh link.");
+    });
+  }
+
+  // ---- amount control ----
+
+  function clamp(n){ return Math.min(MAX, Math.max(MIN, n)); }
+
+  $("amtRange").addEventListener("input", function(){
+    $("amtBox").value = (this.value / 100).toFixed(2);
+    $("saveMsg").innerHTML = "";
+  });
+  $("amtBox").addEventListener("input", function(){
+    var n = parseFloat(this.value);
+    if(!isNaN(n)) $("amtRange").value = Math.round(clamp(n) * 100);
+    $("saveMsg").innerHTML = "";
+  });
+  $("amtBox").addEventListener("blur", function(){
+    var n = parseFloat(this.value);
+    this.value = (isNaN(n) ? current : clamp(n)).toFixed(2);
+    $("amtRange").value = Math.round(parseFloat(this.value) * 100);
+  });
+
+  $("saveBtn").addEventListener("click", function(){
+    var n = clamp(parseFloat($("amtBox").value));
+    if(isNaN(n)){ say($("saveMsg"), "Enter an amount between $5.11 and $511.", false); return; }
+
+    if(Math.abs(n - current) < 0.005){
+      say($("saveMsg"), "That is what you give now.", true);
+      return;
+    }
+
+    if(n > current){
+      say($("saveMsg"),
+        "Giving more starts a new plan at " + money(n) + ", charged today. " +
+        '<a href="' + JOIN + '?amount=' + n.toFixed(2) + '" style="color:#2A5F3C;font-weight:600">Set it up here</a>, ' +
+        "then stop this one below.", true);
+      return;
+    }
+
+    busy(this, true, "Save this amount");
+    var btn = this;
+    post({action:"lower", k:k, amount:n.toFixed(2)}).then(function(d){
+      busy(btn, false, "Save this amount");
+      if(d && d.status === "ok"){
+        current = n;
+        $("curAmount").textContent = money(current);
+        var date = when(d.renews_on);
+        say($("saveMsg"), "Saved. You give " + money(current) + " from " + (date || "your next charge") + ".", true);
+      } else {
+        say($("saveMsg"), (d && d.message) || "We could not change that. Write to kusudi@worldofpurpose.com and it gets handled.", false);
+      }
+    }).catch(function(){
+      busy(btn, false, "Save this amount");
+      say($("saveMsg"), "Something went wrong. Please try again.", false);
+    });
+  });
+
+  // ---- cancel ----
+
+  $("cancelOpen").addEventListener("click", function(){
+    $("cancelCard").classList.remove("hide");
+    $("cancelOpen").classList.add("hide");
+    $("cancelCard").scrollIntoView({behavior:"smooth", block:"center"});
+  });
+  $("cancelNo").addEventListener("click", function(){
+    $("cancelCard").classList.add("hide");
+    $("cancelOpen").classList.remove("hide");
+  });
+  $("cancelYes").addEventListener("click", function(){
+    var btn = this;
+    busy(btn, true, "Yes, stop it");
+    post({action:"cancel", k:k}).then(function(d){
+      busy(btn, false, "Yes, stop it");
+      if(d && d.status === "ok"){
+        var date = when(d.renews_on);
+        say($("cancelMsg"), "Done. Your membership ends on " + (date || "the end of this period") + ". You keep everything until then.", true);
+        $("cancelYes").classList.add("hide");
+        $("cancelNo").textContent = "Close";
+        $("changeCard").classList.add("hide");
+        $("statePill").className = "pill warn";
+        $("stateText").textContent = "Ending";
+      } else {
+        say($("cancelMsg"), "We could not do that here. Write to kusudi@worldofpurpose.com and it gets handled today.", false);
+      }
+    }).catch(function(){
+      busy(btn, false, "Yes, stop it");
+      say($("cancelMsg"), "Something went wrong. Please try again.", false);
+    });
+  });
+
+  // ---- ask for a link ----
+
+  $("askForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var email = $("askEmail").value.trim();
+    if(!email) return;
+    busy($("askBtn"), true, "Send my link");
+    post({action:"link", email:email}).then(function(){
+      busy($("askBtn"), false, "Send my link");
+      say($("askMsg"), "Check your email. If that address is on a membership, your link is on its way.", true);
+    }).catch(function(){
+      busy($("askBtn"), false, "Send my link");
+      say($("askMsg"), "Check your email. If that address is on a membership, your link is on its way.", true);
+    });
+  });
+
+  // ---- go ----
+
+  if(k){ load(); } else { show("ask"); }
+})();
+</script>
+</body>
+</html>
