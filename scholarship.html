@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Alignment scholarship</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#2E3F32; --pine:#1C2A20; --beige:#EEE3D7; --paper:#F7F5F1; --sage:#9DB39C;
+  --ink:#1C2A20; --soft:#5F7064; --line:rgba(46,63,50,.14);
+  --display:"Alfa Slab One","Rockwell","Roboto Slab",Georgia,serif;
+  --ui:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#FFFFFF;
+  background-image:radial-gradient(900px 520px at 88% -6%, rgba(157,179,156,.22), transparent 62%),
+                   radial-gradient(700px 520px at -8% 38%, rgba(157,179,156,.10), transparent 60%);
+  color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; min-height:100vh;
+}
+.wrap{max-width:580px;margin:0 auto;padding:40px max(16px,env(safe-area-inset-left,0px)) 72px}
+.brand{display:flex;align-items:center;gap:12px;margin:0 0 34px}
+.brand svg{width:38px;height:38px;flex:none}
+.brand span{font-family:var(--ui);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--sage)}
+h1{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.2;margin:0 0 14px;color:var(--forest)}
+.lede{margin:0 0 10px;color:var(--soft)}
+.lede strong{color:var(--forest);font-weight:600}
+.card{background:#F5F7F4;border:1px solid var(--line);border-radius:18px;padding:26px 22px;margin:0 0 18px;box-shadow:0 18px 40px -30px rgba(28,42,32,.35)}
+.card h2{font-family:var(--ui);font-weight:500;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sage);margin:0 0 6px}
+.q{font-family:var(--body);font-size:18px;color:var(--forest);margin:22px 0 4px}
+.q:first-of-type{margin-top:6px}
+.hint{font-family:var(--ui);font-size:14px;color:var(--soft);margin:0 0 10px}
+label.f{display:block;font-family:var(--ui);font-size:14px;color:var(--soft);margin:0 0 7px}
+input[type=text],input[type=email],input[type=tel],textarea{
+  font-family:var(--ui);font-size:17px;color:var(--forest);background:#FFFFFF;
+  border:1px solid var(--line);border-radius:12px;padding:13px 14px;width:100%;
+}
+textarea{font-family:var(--body);min-height:96px;resize:vertical;line-height:1.55}
+input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
+.opts{display:grid;gap:9px;margin:4px 0 0}
+.opt{display:flex;align-items:center;gap:12px;background:#FFFFFF;border:1px solid var(--line);border-radius:12px;padding:13px 15px;cursor:pointer;font-family:var(--ui);font-size:16px;transition:border-color .15s ease,background .15s ease}
+.opt:hover{border-color:var(--sage)}
+.opt input{accent-color:var(--forest);width:18px;height:18px;flex:none;margin:0}
+.opt.on{border-color:var(--forest);background:#FFFFFF;box-shadow:0 0 0 1px var(--forest) inset}
+.reassure{font-family:var(--ui);font-size:14.5px;color:var(--forest);background:rgba(157,179,156,.18);border-radius:12px;padding:12px 14px;margin:12px 0 0;line-height:1.55}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  font-family:var(--ui);font-size:17px;font-weight:500;cursor:pointer;
+  background:var(--forest);color:var(--paper);border:0;border-radius:999px;padding:16px 24px;
+  text-decoration:none;transition:transform .2s ease,box-shadow .2s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -14px rgba(28,42,32,.6)}
+.btn[disabled]{opacity:.5;cursor:default;transform:none;box-shadow:none}
+.note{font-family:var(--ui);font-size:14px;color:var(--soft);margin:14px 0 0;text-align:center}
+.msg{font-family:var(--ui);font-size:15px;border-radius:12px;padding:13px 15px;margin:16px 0 0}
+.msg.bad{background:rgba(232,132,107,.16);color:#8A3F28}
+.foot{font-family:var(--ui);font-size:14px;color:var(--sage);text-align:center;margin:34px 0 0}
+.foot a{color:var(--soft)}
+.hide{display:none!important}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(247,245,241,.4);border-top-color:var(--paper);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.done h1{margin-bottom:16px}
+.done .card{text-align:center}
+.tick{width:54px;height:54px;border-radius:50%;background:rgba(63,143,90,.14);color:#2A5F3C;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <svg viewBox="0 0 160 160" aria-hidden="true">
+      <circle cx="80" cy="80" r="76" fill="#EEE3D7"/>
+      <g fill="none" stroke="#2E3F32" stroke-width="11" stroke-linecap="round">
+        <path d="M 44 82 A 34 34 0 0 1 78 116"/>
+        <path d="M 44 56 A 60 60 0 0 1 104 116"/>
+        <path d="M 52 30 A 86 86 0 0 1 130 108"/>
+      </g>
+      <circle cx="44" cy="116" r="11" fill="#2E3F32"/>
+    </svg>
+    <span>World of Purpose</span>
+  </div>
+
+  <div id="formView">
+    <h1>A free scholarship.</h1>
+    <p class="lede">Alignment starts at $5.11 a month. If you can't do that right now, you don't have to.</p>
+    <p class="lede"><strong>Money should never be the reason you stay stuck.</strong> Tell us a little and you're in. There is nothing to pay and no card to enter.</p>
+
+    <form id="form" autocomplete="on">
+
+      <div class="card">
+        <h2>You</h2>
+        <label class="f" for="name">Your name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required>
+        <div style="height:16px"></div>
+        <label class="f" for="email">Your email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+        <div style="height:16px"></div>
+        <label class="f" for="phone">Your phone <span style="opacity:.7">(optional)</span></label>
+        <input type="tel" id="phone" name="phone" autocomplete="tel">
+      </div>
+
+      <div class="card">
+        <h2>Your situation</h2>
+        <p class="q">How long do you think you'll need this?</p>
+        <p class="hint">A rough guess is fine. We ask so we know when to check in on you, not to put you on a clock.</p>
+        <div class="opts" id="howlongOpts">
+          <label class="opt"><input type="radio" name="howlong" value="1 month"> 1 month</label>
+          <label class="opt"><input type="radio" name="howlong" value="3 months"> 3 months</label>
+          <label class="opt"><input type="radio" name="howlong" value="6 months"> 6 months</label>
+          <label class="opt"><input type="radio" name="howlong" value="I'm not sure yet" checked> I'm not sure yet</label>
+        </div>
+        <p class="reassure">Whatever you pick, you can extend it by just asking. No reapplying, no explaining yourself.</p>
+
+        <p class="q">What is hard right now?</p>
+        <p class="hint">Only as much as you want to share.</p>
+        <textarea id="hard" name="hard"></textarea>
+      </div>
+
+      <div class="card">
+        <h2>Your purpose</h2>
+        <p class="q">Why Alignment, and why now?</p>
+        <textarea id="why" name="why" required></textarea>
+
+        <p class="q">What would you like to be different in 90 days?</p>
+        <textarea id="ninety" name="ninety"></textarea>
+
+        <p class="q">Will you actually show up?</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="show" value="Yes" checked> Yes</label>
+          <label class="opt"><input type="radio" name="show" value="I will do my best"> I will do my best</label>
+        </div>
+
+        <p class="q">If your situation changes, would you pay it forward?</p>
+        <p class="hint">Not a condition. Scholarships are funded by people who once needed one.</p>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="move" value="Yes" checked> Yes</label>
+          <label class="opt"><input type="radio" name="move" value="I hope so"> I hope so</label>
+        </div>
+      </div>
+
+      <button class="btn" type="submit" id="go">Send my application</button>
+      <div id="msg"></div>
+      <p class="note">Approved right away. No waiting, no review queue.</p>
+    </form>
+
+    <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
+  </div>
+
+  <div id="doneView" class="done hide">
+    <h1 id="doneTitle">You're in.</h1>
+    <p class="lede" id="doneLede"></p>
+    <div class="card">
+      <div class="tick" aria-hidden="true">&#10003;</div>
+      <p class="meta" id="doneBody" style="font-family:var(--body);margin:0"></p>
+    </div>
+    <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var API = "https://hook.us2.make.com/2axp3qt5kkhgvq9p5pwofe4rbykybxq5";
+  var $ = function(id){ return document.getElementById(id); };
+
+  // keep the chosen option visibly selected
+  function wireOpts(){
+    var all = document.querySelectorAll(".opt input");
+    function sync(){
+      Array.prototype.forEach.call(document.querySelectorAll(".opt"), function(l){
+        var i = l.querySelector("input");
+        l.classList.toggle("on", !!(i && i.checked));
+      });
+    }
+    Array.prototype.forEach.call(all, function(i){ i.addEventListener("change", sync); });
+    sync();
+  }
+  wireOpts();
+
+  function val(name){
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : "";
+  }
+
+  $("form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = $("go");
+    var payload = {
+      name: $("name").value.trim(),
+      email: $("email").value.trim(),
+      phone: $("phone").value.trim(),
+      howlong: val("howlong"),
+      show: val("show"),
+      move: val("move"),
+      why: $("why").value.trim(),
+      hard: $("hard").value.trim(),
+      ninety: $("ninety").value.trim()
+    };
+    if(!payload.name || !payload.email){
+      $("msg").innerHTML = '<div class="msg bad">Add your name and a valid email.</div>';
+      return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span>';
+
+    fetch(API, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    }).then(function(r){
+      return r.json().catch(function(){ return {status:"error"}; });
+    }).then(function(d){
+      btn.disabled = false;
+      btn.innerHTML = "Send my application";
+      if(d && d.status === "ok"){
+        var first = payload.name.split(/\s+/)[0];
+        $("doneTitle").textContent = first ? first + ", you're in." : "You're in.";
+        $("doneLede").textContent = "Your scholarship is approved. Nothing to pay, nothing to cancel.";
+        $("doneBody").innerHTML = d.invited
+          ? "Your invitation to the community is on its way to <b>" + payload.email + "</b>. Check your inbox, and your spam folder if it is not there in a few minutes."
+          : "We have you. Your invitation to the community is coming to <b>" + payload.email + "</b> shortly.";
+        $("formView").classList.add("hide");
+        $("doneView").classList.remove("hide");
+        window.scrollTo({top:0, behavior:"smooth"});
+      } else {
+        $("msg").innerHTML = '<div class="msg bad">' + ((d && d.message) || "Something went wrong. Please try again, or write to kusudi@worldofpurpose.com and you are in either way.") + '</div>';
+      }
+    }).catch(function(){
+      btn.disabled = false;
+      btn.innerHTML = "Send my application";
+      $("msg").innerHTML = '<div class="msg bad">Something went wrong. Please try again, or write to kusudi@worldofpurpose.com and you are in either way.</div>';
+    });
+  });
+})();
+</script>
+</body>
+</html>
