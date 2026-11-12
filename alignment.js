@@ -18,7 +18,8 @@
     ["In here, I'm live with you twice a month. Teaching, hot seats, and your questions answered.",
      "In here, I'm live with you twice a month, Thursdays at 8pm Eastern. Teaching, hot seats, and your questions answered."],
     ["Two live sessions a month, and every one is recorded.", "Two live sessions a month, Thursdays at 8pm Eastern, and every one is recorded."],
-    ["You're live with Kusudi twice a month, not once a year at an event.", "You're live with Kusudi twice a month on Thursdays, not once a year at an event."]
+    ["You're live with Kusudi twice a month, not once a year at an event.", "You're live with Kusudi twice a month on Thursdays, not once a year at an event."],
+    ["If you're approved, you'll get an email titled Access Granted.", "If you're approved, you'll get an email titled Your scholarship is approved."]
   ];
   function fixCopy() {
     if (!document.body) return;
