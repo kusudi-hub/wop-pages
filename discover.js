@@ -574,7 +574,7 @@ $("#declare-form").addEventListener("submit", ev => {
     const payload = JSON.stringify({ id: "page:" + email.toLowerCase(), full_name: name, email,
       purpose, location: (f.get("city")||"").trim(),
       show_on_map: "true", next: f.get("next") || "join", source: "page" });
-    if (HOOK_URL && HOOK_URL.indexOf("http") === 0) fetch(HOOK_URL, {method:"POST", mode:"no-cors", headers:{"Content-Type":"text/plain"}, body: payload}).catch(()=>{});
+    if (HOOK_URL && HOOK_URL.indexOf("http") === 0) fetch(HOOK_URL, {method:"POST", mode:"no-cors", keepalive:true, headers:{"Content-Type":"text/plain"}, body: payload}).catch(()=>{});
     // GHL only accepts JSON or form data, so send it as form data (works from any page)
     if (GHL_HOOK && GHL_HOOK.indexOf("http") === 0) fetch(GHL_HOOK, {method:"POST", mode:"no-cors", keepalive:true, body: new URLSearchParams(JSON.parse(payload))}).catch(()=>{});
   }
@@ -584,6 +584,8 @@ $("#declare-form").addEventListener("submit", ev => {
   renderNumbers(true); renderFeed(); renderPanel(); renderWall(); requestDraw();
   scrollToEl(ROOT.querySelector(".stats"));
   const slot = $("[data-form-slot]");
+  const goUrl = `${JOIN_URL}?name=${encodeURIComponent(rec.first || "")}&declaration=${encodeURIComponent(rec.purpose || "")}`;
+  const autoGo = !PREVIEW && (f.get("next") || "join") === "join";
   slot.innerHTML = `<div class="done">
     <span class="rank">You are #${fmt(rows.length)}</span>
     <h3>Welcome to the world of purpose, ${esc(rec.first)}.</h3>
@@ -593,9 +595,11 @@ $("#declare-form").addEventListener("submit", ev => {
 </svg></div></div>
     <p style="max-width:44ch">Your light is on the map. Your line goes on the wall after a quick review. Welcome to the movement.</p>
     <p style="max-width:44ch"><b>You declared it. Now live it.</b> Alignment is the room where you live your purpose with Kusudi and people walking the same road. Pay what you can.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-forest" href="${JOIN_URL}?name=${encodeURIComponent(rec.first || "")}&declaration=${encodeURIComponent(rec.purpose || "")}">Join Alignment</a><a class="btn" style="background:none;color:var(--forest);box-shadow:inset 0 0 0 2px var(--forest)" href="#wall">Find yourself on the wall</a></div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center"><a class="btn btn-forest" data-go-align href="${goUrl}">Join Alignment</a>${autoGo ? `<small data-go-note style="color:var(--moss)">Taking you there now.</small>` : ""}</div>
     ${PREVIEW ? `<p class="preview-note">Preview only. This test declaration stays in your browser and was not sent anywhere.</p>` : ""}
   </div>`;
+  // People who said "Keep me in the loop" go straight to the Alignment page, with their name and declaration at the top
+  if (autoGo) setTimeout(() => { try { (window.top || window).location.href = goUrl; } catch (e) { location.href = goUrl; } }, 3500);
 });
 
 /* ---------- live data ---------- */

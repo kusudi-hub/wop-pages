@@ -68,6 +68,12 @@
     function wording() {
       var pl = page.querySelector('label[for="alPurpose"]');
       if (pl && pl.textContent !== 'The purpose of my life is') pl.textContent = 'The purpose of my life is';
+      // Their declaration at the top reads as one full sentence
+      var dq = page.querySelector('#declared q'), dt = dq && dq.textContent.trim();
+      if (dt && !/^the purpose of my life is/i.test(dt)) {
+        dt = dt.replace(/^my purpose is\s*/i, '');
+        dq.textContent = 'The purpose of my life is ' + dt.charAt(0).toLowerCase() + dt.slice(1) + (/[.!?]$/.test(dt) ? '' : '.');
+      }
     }
     wording();
     new MutationObserver(wording).observe(page, { childList: true, subtree: true });
