@@ -39,22 +39,15 @@
     holder.parentNode.insertBefore(fs, holder.nextSibling);
     renumber();
   }
-  /* The injected question sits third, so the three questions after it are relabelled to match. */
+  /* Number every question in the block in document order, so the injected one does not
+     leave a gap and the page's own numbering stays correct whatever order things render in. */
   function renumber() {
-    var order = ['sch3', 'sch4', 'sch5'];
-    var n = 4;
-    for (var i = 0; i < order.length; i++) {
-      var el = document.getElementById(order[i]);
-      var lab = el ? (el.closest('.field') || el.parentNode) : null;
-      var tag = lab ? lab.querySelector('legend b, label b') : null;
-      if (!tag) {
-        var fsAll = document.querySelectorAll('#scholar fieldset.opts legend b');
-        for (var j = 0; j < fsAll.length; j++) {
-          if (fsAll[j].parentNode.parentNode.id !== HOWLONG_ID && /^[0-9]+\.$/.test(fsAll[j].textContent)) { fsAll[j].textContent = (n++) + '.'; }
-        }
-        continue;
-      }
-      tag.textContent = (n++) + '.';
+    var sch = document.getElementById('scholar');
+    if (!sch) return;
+    var tags = sch.querySelectorAll('legend b, label b');
+    var n = 1;
+    for (var i = 0; i < tags.length; i++) {
+      if (/^\s*[0-9]+\.\s*$/.test(tags[i].textContent)) { tags[i].textContent = (n++) + '.'; }
     }
   }
   /* Append howlong to the scholarship submission without touching the page's own handler. */
