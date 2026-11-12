@@ -253,10 +253,10 @@ input[type=range]{width:100%;accent-color:var(--forest);height:28px;margin:0 0 6
   function paintLimited(d){
     var first = (d.name || "").trim().split(/\s+/)[0];
     $("hello").textContent = first ? first + ", here is your membership." : "Your Alignment membership.";
-    $("curAmount").textContent = money(d.saved_amount || 0);
+    $("curAmount").parentNode.classList.add("hide");
     $("statePill").className = "pill";
     $("stateText").textContent = (d.saved_state === "ending") ? "Ending" : "Active";
-    $("nextLine").textContent = "Charged every 30 days.";
+    $("nextLine").textContent = "Your membership is active. We cannot show your exact amount on this page yet.";
     $("changeCard").classList.add("hide");
     $("cancelOpen").classList.add("hide");
     $("cardBtn").href = "mailto:kusudi@worldofpurpose.com?subject=My%20Alignment%20membership";
