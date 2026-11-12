@@ -89,7 +89,7 @@ input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
   <div id="formView">
     <h1>A free scholarship.</h1>
     <p class="lede">Alignment starts at $5.11 a month. If you can't do that right now, you don't have to.</p>
-    <p class="lede"><strong>Money should never be the reason you stay stuck.</strong> Tell us a little and you're in. There is nothing to pay and no card to enter.</p>
+    <p class="lede"><strong>Money should never be the reason you stay stuck.</strong> Tell us a little about where you are. There is nothing to pay and no card to enter.</p>
 
     <form id="form" autocomplete="on">
 
@@ -146,14 +146,14 @@ input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
 
       <button class="btn" type="submit" id="go">Send my application</button>
       <div id="msg"></div>
-      <p class="note">Approved right away. No waiting, no review queue.</p>
+      <p class="note">We review every application within 48 hours. Watch your email.</p>
     </form>
 
     <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
   </div>
 
   <div id="doneView" class="done hide">
-    <h1 id="doneTitle">You're in.</h1>
+    <h1 id="doneTitle">Thank you for applying.</h1>
     <p class="lede" id="doneLede"></p>
     <div class="card">
       <div class="tick" aria-hidden="true">&#10003;</div>
@@ -220,11 +220,9 @@ input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
       btn.innerHTML = "Send my application";
       if(d && d.status === "ok"){
         var first = payload.name.split(/\s+/)[0];
-        $("doneTitle").textContent = first ? first + ", you're in." : "You're in.";
-        $("doneLede").textContent = "Your scholarship is approved. Nothing to pay, nothing to cancel.";
-        $("doneBody").innerHTML = d.invited
-          ? "Your invitation to the community is on its way to <b>" + payload.email + "</b>. Check your inbox, and your spam folder if it is not there in a few minutes."
-          : "We have you. Your invitation to the community is coming to <b>" + payload.email + "</b> shortly.";
+        $("doneTitle").textContent = first ? "Thank you, " + first + "." : "Thank you for applying.";
+        $("doneLede").textContent = "We review every application within 48 hours.";
+        $("doneBody").innerHTML = "Check your email at <b>" + payload.email + "</b>. When your scholarship is approved, that is where it will land. Look in your spam folder too.";
         $("formView").classList.add("hide");
         $("doneView").classList.remove("hide");
         window.scrollTo({top:0, behavior:"smooth"});
