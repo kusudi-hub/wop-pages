@@ -64,6 +64,13 @@
       fv.innerHTML = 'Full value <s>' + ((tot && tot.textContent.trim()) || '$14,679') + '</s>';
       amount.parentNode.insertBefore(fv, amount);
     }
+    // Declaration wording: "The purpose of my life is"
+    function wording() {
+      var pl = page.querySelector('label[for="alPurpose"]');
+      if (pl && pl.textContent !== 'The purpose of my life is') pl.textContent = 'The purpose of my life is';
+    }
+    wording();
+    new MutationObserver(wording).observe(page, { childList: true, subtree: true });
     // Show the video box even before the real video is added
     var vsl = page.querySelector('#vsl');
     if (vsl && vsl.hidden && !(window.ALIGN && window.ALIGN.VIDEO_EMBED)) vsl.hidden = false;
@@ -89,7 +96,7 @@
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var SEED = [["Kay", "to help others experience freedom", "Indianapolis"], ["Zalika M.", "My purpose is to help others access their inner power in order for them to be empowered to make progress in their life.", "Atlanta"], ["Datrice M.", "to help others be the best version of themselves while leaving a positive impact on the world.", "Champlin"], ["Nicole P.", "My purpose is to give others words of encouragement in order for them to feel cared about and motivated.", "Hampton"], ["Justean W.", "To help people heal their heart so they can align closer with God.", "Norman"], ["Melissa B.", "my purpose is to help others heal their internal trauma in order for them to fully embrace their unique superpower", "Miami"], ["Jennifer B.", "My purpose is to encourage others to push forward in order for them to confidently walk in their purpose.", "McKinney"], ["Fiyinfoluwa O.", "to help others build confidence in themselves, recognize their capabilities, and believe in the value they bring to the world", "Lagos"], ["Shamia B.", "to create a clean space for others to be mentally clear", ""], ["Pamela B.", "my purpose is to help others navigate through all the dark and light tunnels of being an Alzheimer's dementia caregiver", "Bristol"]];
   function clean(t) {
-    t = String(t || '').trim().replace(/^my purpose is\s*/i, '');
+    t = String(t || '').trim().replace(/^(?:the purpose of my life is|my purpose is)\s*/i, '');
     if (!t) return '';
     t = t.charAt(0).toUpperCase() + t.slice(1);
     return /[.!?]$/.test(t) ? t : t + '.';

@@ -434,7 +434,7 @@ html.embedded .pmodal-card{max-height:560px;margin-top:var(--pm-top,120px)}
         <div class="mpi-in">
           <label for="f-purpose">What’s your purpose?</label>
           <div class="mpi-box">
-            <span class="mpi-start" aria-hidden="true">My purpose is</span>
+            <span class="mpi-start" aria-hidden="true">The purpose of my life is</span>
             <textarea id="f-purpose" name="purpose" maxlength="400" placeholder="to help people experience freedom by" required></textarea>
           </div>
           <span class="hint">One or two sentences, in your own words. Not sure yet? <a href="#video">Watch the free training first.</a></span>
@@ -596,7 +596,7 @@ html.embedded .pmodal-card{max-height:560px;margin-top:var(--pm-top,120px)}
   <div class="pmodal-card" role="dialog" aria-modal="true" aria-label="Full purpose">
     <button class="pmodal-x" type="button" data-pclose aria-label="Close">×</button>
     <div class="pwho"><span class="flag" data-pm-flag></span><b data-pm-name></b><span data-pm-place></span></div>
-    <div class="pmpi">My purpose is</div>
+    <div class="pmpi">The purpose of my life is</div>
     <q data-pm-text></q>
     <span class="pwhen" data-pm-when></span>
   </div>
@@ -625,7 +625,7 @@ const fmt = n => n.toLocaleString("en-US");
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const flagOf = country => { const cc = ISO[country]; return cc ? String.fromCodePoint(...[...cc].map(c => 0x1F1E6 + c.charCodeAt(0) - 65)) : "🌍"; };
-const clean = s => String(s||"").trim().replace(/^my purpose( my purpose)? is\s*/i,"").replace(/^my purpose\s*/i,"").replace(/^[\s….]+/,"").replace(/^is\s+/i,"").replace(/^To\s/,"to ");
+const clean = s => String(s||"").trim().replace(/^the purpose of my life is\s*/i,"").replace(/^my purpose( my purpose)? is\s*/i,"").replace(/^my purpose\s*/i,"").replace(/^[\s….]+/,"").replace(/^is\s+/i,"").replace(/^To\s/,"to ");
 const cut = (s,n) => { s = clean(s); return s.length>n ? s.slice(0,n-1).replace(/\s+\S*$/,"")+"…" : s; };
 
 /* ---------- rows ---------- */
@@ -717,7 +717,7 @@ function renderNumbers(live){
   if (newest){
     $("[data-newest-name]").innerHTML = `${esc(newest.first)} <span class="flag">${flagOf(newest.country)}</span>`;
     const nt = $(".stat.newest"); if (nt && newest.k != null) nt.dataset.k = newest.k;
-    $("[data-newest-text]").textContent = newest.purpose ? "My purpose is " + cut(newest.purpose, 90) : "";
+    $("[data-newest-text]").textContent = newest.purpose ? "The purpose of my life is " + cut(newest.purpose, 90) : "";
     $("[data-newest-when]").textContent = [shortPlace(newest), ago(newest.at)].filter(Boolean).join(" · ");
   }
 }
@@ -725,7 +725,7 @@ function renderNumbers(live){
 /* ---------- feed ---------- */
 function renderFeed(){
   const recent = rows.filter(r => r.first).sort((a,b)=> b.at.localeCompare(a.at)).slice(0,30);
-  const item = r => `<span class="item"${r.purpose && r.k != null ? ` data-k="${r.k}"` : ""}><span class="flag">${flagOf(r.country)}</span><b>${esc(r.first)}</b>${r.country ? " in " + esc(shortPlace(r)) : ""}${r.purpose ? ` <em>My purpose is ${esc(cut(r.purpose,60))}</em>` : " declared their purpose"} · ${ago(r.at)}</span>`;
+  const item = r => `<span class="item"${r.purpose && r.k != null ? ` data-k="${r.k}"` : ""}><span class="flag">${flagOf(r.country)}</span><b>${esc(r.first)}</b>${r.country ? " in " + esc(shortPlace(r)) : ""}${r.purpose ? ` <em>The purpose of my life is ${esc(cut(r.purpose,60))}</em>` : " declared their purpose"} · ${ago(r.at)}</span>`;
   const html = recent.map(item).join("");
   $("[data-feed]").innerHTML = html + html;
 }
@@ -743,7 +743,7 @@ function renderPanel(){
       <div><p class="eyebrow">${eyebrow}</p><h3 style="margin-top:6px">${esc(title)}</h3></div>
       <p class="sub"><b class="num">${fmt(ppl.length)}</b> ${ppl.length===1?"person has":"people have"} declared their purpose here</p>
       ${g ? `<button class="btn btn-ghost btn-small" type="button" data-pzoom style="justify-self:start">Zoom in to see each city</button>` : ""}
-      <div class="list">${ppl.map(r=>`<div class="decl"${r.purpose && r.k != null ? ` data-k="${r.k}"` : ""}><div class="who">${esc(r.first||"Someone")}<span>${g && shortPlace(r) ? esc(shortPlace(r)) + " \u00b7 " : ""}${ago(r.at)}</span></div>${r.purpose?`<p>My purpose is ${esc(cut(r.purpose,300))}</p>`:""}</div>`).join("")}</div>`;
+      <div class="list">${ppl.map(r=>`<div class="decl"${r.purpose && r.k != null ? ` data-k="${r.k}"` : ""}><div class="who">${esc(r.first||"Someone")}<span>${g && shortPlace(r) ? esc(shortPlace(r)) + " \u00b7 " : ""}${ago(r.at)}</span></div>${r.purpose?`<p>The purpose of my life is ${esc(cut(r.purpose,300))}</p>`:""}</div>`).join("")}</div>`;
     el.querySelector("[data-back]").onclick = () => { selected = null; focusCountry = null; renderPanel(); resetMap(); tip.hidden = true; };
     const z = el.querySelector("[data-pzoom]"); if (z) z.onclick = () => fitPlaces(p.places, Math.min(MAXK, Math.max(6, view.k * 5)));
   } else if (focusCountry){
@@ -987,7 +987,7 @@ function nextSpot(){
   setTimeout(() => {
     if (mapTouched) return;
     spotP = r;
-    spot.innerHTML = `<b>${esc(r.first)}</b> <span class="flag">${flagOf(r.country)}</span> ${esc(shortPlace(r))} · ${ago(r.at)}<p>My purpose is ${esc(cut(r.purpose,80))}</p>${r.purpose.length > 80 ? `<span class="more">Tap to read the whole thing</span>` : ""}`;
+    spot.innerHTML = `<b>${esc(r.first)}</b> <span class="flag">${flagOf(r.country)}</span> ${esc(shortPlace(r))} · ${ago(r.at)}<p>The purpose of my life is ${esc(cut(r.purpose,80))}</p>${r.purpose.length > 80 ? `<span class="more">Tap to read the whole thing</span>` : ""}`;
     spot.classList.remove("off"); placeSpot();
   }, 450);
 }
@@ -996,7 +996,7 @@ function nextSpot(){
 const TONES = ["t1","t2","t3","t4","t2","t1","t4","t3"];
 function cardHTML(r, i){
   const full = clean(r.purpose), p = cut(full, 220), size = p.length < 46 ? "s" : p.length < 120 ? "m" : "l";
-  return `<figure class="card ${size} ${TONES[i % TONES.length]}${r.mine?" me":""}"${r.k != null ? ` data-k="${r.k}"` : ""} style="margin:0"><div><div class="mpi">My purpose is</div><q>${esc(p)}</q></div><figcaption class="by"><span class="flag">${flagOf(r.country)}</span><span><b>${esc(r.first)}</b>${r.country ? " · " + esc(shortPlace(r)) : ""}</span></figcaption></figure>`;
+  return `<figure class="card ${size} ${TONES[i % TONES.length]}${r.mine?" me":""}"${r.k != null ? ` data-k="${r.k}"` : ""} style="margin:0"><div><div class="mpi">The purpose of my life is</div><q>${esc(p)}</q></div><figcaption class="by"><span class="flag">${flagOf(r.country)}</span><span><b>${esc(r.first)}</b>${r.country ? " · " + esc(shortPlace(r)) : ""}</span></figcaption></figure>`;
 }
 function wallItems(){ return rows.filter(r => r.first && r.purpose).sort((a,b)=>b.at.localeCompare(a.at)); }
 function renderWall(){
@@ -1173,7 +1173,7 @@ $("#declare-form").addEventListener("submit", ev => {
   slot.innerHTML = `<div class="done">
     <span class="rank">You are #${fmt(rows.length)}</span>
     <h3>Welcome to the world of purpose, ${esc(rec.first)}.</h3>
-    <div class="sharecard"><div><div class="mpi-line">My purpose is</div><div class="box2">${esc(cut(purpose,220))}</div></div>
+    <div class="sharecard"><div><div class="mpi-line">The purpose of my life is</div><div class="box2">${esc(cut(purpose,220))}</div></div>
     <div class="foot"><span>#${fmt(rows.length)} of ${fmt(GOAL)}${rec.city ? " · " + esc(rec.city) : ""}</span>__WORDMARK_SMALL__</div></div>
     <p style="max-width:44ch">Your light is on the map. Your line goes on the wall after a quick review. Welcome to the movement.</p>
     <p style="max-width:44ch"><b>You declared it. Now live it.</b> Alignment is the room where you live your purpose with Kusudi and people walking the same road. Pay what you can.</p>
