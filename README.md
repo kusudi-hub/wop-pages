@@ -10,6 +10,6 @@ New declarations still go straight to the Google sheet and to GoHighLevel. Nothi
 
 ## Alignment page design layer
 
-`alignment.js` adds the design to the Alignment page at join.worldofpurpose.com/alignment: white look, moving ripples, real faces by the count, the live declarations strip with real stats, motion, side margins on phones, and the video box before the real video is in. It only adds to the page. The checkout, Whop and the settings block on the GoHighLevel page are not touched. The GoHighLevel page loads it with:
+`alignment.js` adds the design to the Alignment page at join.worldofpurpose.com/alignment: white look, moving ripples, real faces by the count, the live declarations strip with real stats, motion, side margins on phones, and the video box before the real video is in. It only adds to the page. The checkout, Whop and the settings block on the GoHighLevel page are not touched, with one exception: if the settings block leaves SCHOLARSHIP_URL blank, `alignment.js` fills it with the Make scholarship webhook. The GoHighLevel page loads it with:
 
 `<script src="https://kusudi-hub.github.io/wop-pages/alignment.js" async></script>`
