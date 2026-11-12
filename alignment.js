@@ -8,6 +8,76 @@
   var SCH_URL = "https://hook.us2.make.com/2axp3qt5kkhgvq9p5pwofe4rbykybxq5";
   function setSch() { if (window.ALIGN && !window.ALIGN.SCHOLARSHIP_URL) window.ALIGN.SCHOLARSHIP_URL = SCH_URL; }
   setSch(); document.addEventListener('DOMContentLoaded', setSch); addEventListener('load', setSch);
+
+  /* The duration question. The standalone form at /scholarship asks how long someone needs the
+     scholarship; the inline form on this page did not, so most applicants were never asked.
+     The question is injected here and appended to the submission by wrapping fetch, because the
+     GoHighLevel page builds its own query string inside a handler this file cannot reach.
+     The answer is never binding and never cuts access. It only prompts a warm check in. */
+  var HOWLONG_ID = 'wop-howlong';
+  function howlongValue() {
+    var picked = document.querySelector('input[name="wop_howlong"]:checked');
+    return picked ? picked.value : "I'm not sure yet";
+  }
+  function addHowlong() {
+    if (document.getElementById(HOWLONG_ID)) return;
+    var sch = document.getElementById('scholar');
+    var after = document.getElementById('sch2');
+    if (!sch || !after) return;
+    var holder = after.closest('.field') || after.parentNode;
+    if (!holder || !holder.parentNode) return;
+    var opts = [['1 month', ''], ['3 months', ''], ['6 months', ''], ["I'm not sure yet", ' checked']];
+    var html = '';
+    for (var i = 0; i < opts.length; i++) {
+      html += '<label class="opt"><input type="radio" name="wop_howlong" value="' + opts[i][0] + '"' + opts[i][1] + '> ' + opts[i][0] + '</label>';
+    }
+    var fs = document.createElement('fieldset');
+    fs.className = 'field opts';
+    fs.id = HOWLONG_ID;
+    fs.innerHTML = '<legend><b>3.</b> How long would you need a free seat?</legend>' + html +
+      '<p class="sch-intro" style="margin-top:10px">Whatever you pick, you can extend it by just asking. No reapplying, no explaining yourself.</p>';
+    holder.parentNode.insertBefore(fs, holder.nextSibling);
+    renumber();
+  }
+  /* The injected question sits third, so the three questions after it are relabelled to match. */
+  function renumber() {
+    var order = ['sch3', 'sch4', 'sch5'];
+    var n = 4;
+    for (var i = 0; i < order.length; i++) {
+      var el = document.getElementById(order[i]);
+      var lab = el ? (el.closest('.field') || el.parentNode) : null;
+      var tag = lab ? lab.querySelector('legend b, label b') : null;
+      if (!tag) {
+        var fsAll = document.querySelectorAll('#scholar fieldset.opts legend b');
+        for (var j = 0; j < fsAll.length; j++) {
+          if (fsAll[j].parentNode.parentNode.id !== HOWLONG_ID && /^[0-9]+\.$/.test(fsAll[j].textContent)) { fsAll[j].textContent = (n++) + '.'; }
+        }
+        continue;
+      }
+      tag.textContent = (n++) + '.';
+    }
+  }
+  /* Append howlong to the scholarship submission without touching the page's own handler. */
+  var nativeFetch = window.fetch;
+  window.fetch = function (input, init) {
+    try {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      if (url.indexOf(SCH_URL) === 0 && url.indexOf('howlong=') === -1) {
+        var joiner = url.indexOf('?') === -1 ? '?' : '&';
+        var next = url + joiner + 'howlong=' + encodeURIComponent(howlongValue());
+        if (typeof input === 'string') input = next; else input = new Request(next, input);
+      }
+    } catch (e) { /* never block a submission over this */ }
+    return nativeFetch.apply(this, arguments.length > 1 ? [input, init] : [input]);
+  };
+  function watchScholar() {
+    addHowlong();
+    var sch = document.getElementById('scholar');
+    if (sch && window.MutationObserver) {
+      new MutationObserver(function () { addHowlong(); }).observe(sch, { childList: true, subtree: true });
+    }
+  }
+  document.addEventListener('DOMContentLoaded', watchScholar); addEventListener('load', watchScholar); watchScholar();
   // Copy fixes until the GoHighLevel page text is edited: refunds are 7 days (first payment back), lives are Thursdays at 8pm Eastern.
   var COPY = [
     ["If it isn't for you, ask within 30 days and get your first month back. One email. No call, no back and forth.",
