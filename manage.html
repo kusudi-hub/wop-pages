@@ -126,6 +126,14 @@ input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fo
       </form>
       <div id="askMsg"></div>
     </div>
+    <div class="card hide" id="resumeCard" style="margin-top:14px">
+      <h2>Changed your mind?</h2>
+      <p class="meta" style="margin-bottom:18px">You can pick your membership back up. Same amount, same everything, nothing to set up again.</p>
+      <button class="btn" id="resumeYes">Keep my membership going</button>
+      <div id="resumeMsg"></div>
+      <p class="note" id="resumeAlt">If that does not go through, you can <a href="https://join.worldofpurpose.com/alignment">start again here</a> any time, or write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a> and it gets handled the same day.</p>
+    </div>
+
     <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
   </div>
 
@@ -270,7 +278,9 @@ input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fo
       $("nextLine").innerHTML = date ? "Your membership ends on <b>" + date + "</b>. Nothing more is charged." : "Your membership is set to end.";
       $("changeCard").classList.add("hide");
       $("cancelOpen").classList.add("hide");
+      $("resumeCard").classList.remove("hide");
     } else {
+      $("resumeCard").classList.add("hide");
       pill.className = "pill";
       $("stateText").textContent = d.state === "trialing" ? "Trial" : "Active";
       $("nextLine").innerHTML = date ? "Your next charge is <b>" + date + "</b>." : "Charged every 30 days.";
@@ -426,12 +436,35 @@ input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fo
         $("changeCard").classList.add("hide");
         $("statePill").className = "pill warn";
         $("stateText").textContent = "Ending";
+        $("resumeCard").classList.remove("hide");
       } else {
         say($("cancelMsg"), "We could not do that here. Write to kusudi@worldofpurpose.com and it gets handled today.", false);
       }
     }).catch(function(){
       busy(btn, false, "Yes, stop it");
       say($("cancelMsg"), "Something went wrong. Please try again.", false);
+    });
+  });
+
+  // ---- undo a cancel ----
+
+  $("resumeYes").addEventListener("click", function(){
+    var btn = this;
+    busy(btn, true, "Keep my membership going");
+    post({action:"resume", k:k}).then(function(d){
+      busy(btn, false, "Keep my membership going");
+      var back = d && d.status === "ok" && d.ending !== true && d.ending !== "true";
+      if(back){
+        say($("resumeMsg"), (d && d.message) || "You are all set. Your membership keeps going.", true);
+        $("resumeYes").classList.add("hide");
+        $("resumeAlt").classList.add("hide");
+        setTimeout(function(){ location.reload(); }, 1800);
+      } else {
+        say($("resumeMsg"), (d && d.message) || "We could not restart it from here.", false);
+      }
+    }).catch(function(){
+      busy(btn, false, "Keep my membership going");
+      say($("resumeMsg"), "Something went wrong. Please try again.", false);
     });
   });
 
