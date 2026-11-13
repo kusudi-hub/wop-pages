@@ -82,7 +82,9 @@
      "In here, I'm live with you twice a month, Thursdays at 8pm Eastern. Teaching, hot seats, and your questions answered."],
     ["Two live sessions a month, and every one is recorded.", "Two live sessions a month, Thursdays at 8pm Eastern, and every one is recorded."],
     ["You're live with Kusudi twice a month, not once a year at an event.", "You're live with Kusudi twice a month on Thursdays, not once a year at an event."],
-    ["If you're approved, you'll get an email titled Access Granted.", "If you're approved, you'll get an email titled Your scholarship is approved."]
+    ["If you're approved, you'll get an email titled Access Granted.", "If you're approved, you'll get an email titled Your scholarship is approved."],
+    ["Doors open Wednesday, November 11 at 7pm ET", "We start Thursday, December 3 at 8pm ET"],
+    ["with the Alignment Kickoff. We open with The Power of a Vision.", "with the Alignment Kickoff and 30 Days of Alignment. Walk into the new year aligned."]
   ];
   function fixCopy() {
     if (!document.body) return;
