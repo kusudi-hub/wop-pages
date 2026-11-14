@@ -336,3 +336,59 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
+
+/* Checkout hardening, Nov 14. The page's own card form script rebuilds the Whop card
+   form whenever the email or phone field changes, to attach them to the checkout. The
+   form mounts early, so for most people the rebuild fires right as they move from the
+   contact fields into the card fields, and anything already typed into the card form is
+   wiped. The first real member hit this and had to pay twice. Two guards:
+   1. A first fill of email or phone no longer rebuilds the form. The member types their
+      email inside Whop's own card form instead, which is the address the access pipeline
+      uses anyway. Correcting an already filled email still rebuilds, so the checkout is
+      never locked to a wrong address. Phone never rebuilds; it only prefills.
+   2. When the card form fails to load, it quietly retries twice before asking anyone
+      to refresh the page. */
+(function () {
+  if (window.__wopPayGuard) return; window.__wopPayGuard = true;
+
+  var prevEmail = null;
+  function initPrev() {
+    if (prevEmail !== null) return;
+    var em = document.getElementById('email');
+    if (em) prevEmail = em.value || '';
+  }
+  initPrev(); document.addEventListener('DOMContentLoaded', initPrev); addEventListener('load', initPrev);
+
+  document.addEventListener('change', function (e) {
+    var t = e.target; if (!t || !t.id) return;
+    if (t.id === 'phone') { e.stopPropagation(); return; }
+    if (t.id === 'email') {
+      initPrev();
+      var was = prevEmail || '';
+      prevEmail = t.value || '';
+      if (!was) e.stopPropagation();
+    }
+  }, true);
+
+  /* Retry a failed card form mount by nudging the amount text, which the page's own
+     script watches. Capped at two quiet retries per visit; after that the page's own
+     "please refresh" message stands. */
+  var tries = 0;
+  function watch() {
+    var txt = document.getElementById('secureTxt');
+    var amt = document.getElementById('lineAmt');
+    if (!txt || !amt || !('MutationObserver' in window)) return;
+    new MutationObserver(function () {
+      if ((txt.textContent || '').indexOf('could not load') === -1) return;
+      if (tries >= 2) return;
+      tries++;
+      txt.textContent = 'Reconnecting to the secure card form...';
+      setTimeout(function () {
+        var t = amt.textContent;
+        amt.textContent = t + '​';
+        setTimeout(function () { amt.textContent = t; }, 60);
+      }, 1200);
+    }).observe(txt, { childList: true, characterData: true, subtree: true });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+})();
