@@ -465,3 +465,83 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
 })();
+
+/* Payment return fix (Nov 15): phones that leave the page to pay (Apple Pay,
+   bank verification) come back to a plain reload with no payment signal, so
+   the confirm step never appears and no welcome goes out. Three nets:
+   1. rewrite Whop's return address so it carries ?status=succeeded and no
+      #fragment that could swallow it (the page's own resume code handles it)
+   2. detect the marker even when it lands inside the #fragment
+   3. a resume banner when someone returns within 45 minutes of starting */
+(function () {
+  if (window.__wopReturnFix) return; window.__wopReturnFix = true;
+  var MARK = 'status=succeeded';
+  function lsGet(k){ try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch(e){ return null; } }
+  function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
+  function fireComplete(tries){
+    if (typeof window.__alignOnComplete === 'function') {
+      try { window.__alignOnComplete({ result: 'payment' }); } catch(e){}
+      lsDel('al_paystart');
+      return;
+    }
+    if ((tries||0) < 100) setTimeout(function(){ fireComplete((tries||0)+1); }, 150);
+  }
+  /* net 1: wrap whichever global owns checkout.create so the return address is query safe */
+  var wrapped = false, t0 = Date.now();
+  function wrap(){
+    if (wrapped) return true;
+    try {
+      for (var k in window) {
+        var o;
+        try { o = window[k]; } catch(e){ continue; }
+        if (o && o.checkout && typeof o.checkout.create === 'function' && !o.checkout.__wopWrapped) {
+          (function(co){
+            var orig = co.create;
+            co.create = function(src){
+              try { if (src && typeof src === 'object' && 'returnUrl' in src) src.returnUrl = location.origin + location.pathname + '?' + MARK; } catch(e){}
+              return orig.apply(this, arguments);
+            };
+            co.__wopWrapped = true;
+          })(o.checkout);
+          wrapped = true;
+        }
+      }
+    } catch(e){}
+    return wrapped;
+  }
+  var wi = setInterval(function(){ if (wrap() || Date.now() - t0 > 20000) clearInterval(wi); }, 250);
+  /* net 2: find the marker wherever it landed */
+  function marked(){
+    try {
+      var s = location.search || '', h = location.hash || '';
+      if (s.indexOf(MARK) !== -1) return 'search';
+      if (h.indexOf(MARK) !== -1) return 'hash';
+      var sp = new URLSearchParams(s.replace(/^\?/, ''));
+      if (sp.has('receipt_id') || sp.has('payment_id')) return 'search';
+    } catch(e){}
+    return '';
+  }
+  function onReady(fn){ if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  onReady(function(){
+    var m = marked();
+    if (m === 'hash') { fireComplete(0); return; }
+    if (m === 'search') { lsDel('al_paystart'); return; }
+    /* net 3: they were mid checkout in this browser less than 45 minutes ago */
+    var ps = lsGet('al_paystart'), st = lsGet('al_enroll') || {};
+    if (!ps || !ps.t || Date.now() - ps.t > 45 * 60000 || st.confirmed) return;
+    var pf = document.getElementById('payForm');
+    if (!pf || !pf.parentNode) return;
+    var b = document.createElement('div');
+    b.id = 'wop-resume';
+    b.style.cssText = 'margin:0 0 14px;padding:12px 14px;border:1px solid rgba(232,217,168,.6);border-radius:10px;background:rgba(232,217,168,.14);font-size:14px;line-height:1.5;';
+    b.innerHTML = 'Just finished your payment? <a href="#" style="text-decoration:underline;font-weight:600;color:inherit;">Tap here to finish your enrollment</a> and get your community invite.';
+    b.querySelector('a').addEventListener('click', function(e){ e.preventDefault(); b.remove(); fireComplete(0); });
+    pf.parentNode.insertBefore(b, pf);
+  });
+  /* remember that a checkout was started in this browser */
+  document.addEventListener('change', function(e){
+    var t = e.target;
+    if (t && t.id === 'email' && t.value && t.value.indexOf('@') > 0) lsSet('al_paystart', { t: Date.now(), email: t.value });
+  }, true);
+})();
