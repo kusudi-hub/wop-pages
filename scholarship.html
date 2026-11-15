@@ -146,7 +146,7 @@ input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
 
       <button class="btn" type="submit" id="go">Send my application</button>
       <div id="msg"></div>
-      <p class="note">We review every application within 48 hours. Watch your email.</p>
+      <p class="note">Every application gets an answer fast, most within minutes. Watch your email.</p>
     </form>
 
     <p class="foot">Questions? Write to <a href="mailto:kusudi@worldofpurpose.com">kusudi@worldofpurpose.com</a></p>
@@ -221,8 +221,8 @@ input:focus,textarea:focus{outline:2px solid var(--sage);outline-offset:1px}
       if(d && d.status === "ok"){
         var first = payload.name.split(/\s+/)[0];
         $("doneTitle").textContent = first ? "Thank you, " + first + "." : "Thank you for applying.";
-        $("doneLede").textContent = "We review every application within 48 hours.";
-        $("doneBody").innerHTML = "Check your email at <b>" + payload.email + "</b>. When your scholarship is approved, that is where it will land. Look in your spam folder too.";
+        $("doneLede").textContent = "Your answer is on its way, usually within minutes.";
+        $("doneBody").innerHTML = "Check your email at <b>" + payload.email + "</b>. The email is titled <b>Your scholarship is approved</b>. Look in your spam folder too.";
         $("formView").classList.add("hide");
         $("doneView").classList.remove("hide");
         window.scrollTo({top:0, behavior:"smooth"});

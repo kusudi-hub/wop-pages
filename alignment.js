@@ -392,3 +392,54 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
 })();
+
+/* Scholarship copy and confirmation, Nov 14. Approval is instant and staying instant, so
+   the 48 hour review copy comes down, and a submitted inline application now swaps the
+   form for a clear confirmation card naming the exact email to watch for, so nobody
+   submits twice or waits for a review that already happened. */
+(function () {
+  if (window.__wopScholarUx) return; window.__wopScholarUx = true;
+  var FINE_NEW = 'No card needed. Every application gets an answer fast, most within minutes.';
+  function fixFine() {
+    var el = document.getElementById('fineTxt');
+    if (el && el.textContent.indexOf('48 hours') > -1) el.textContent = FINE_NEW;
+  }
+  function confirmCard() {
+    var sch = document.getElementById('scholar');
+    if (!sch || document.getElementById('wop-sch-done')) return;
+    var card = document.createElement('div');
+    card.id = 'wop-sch-done';
+    card.setAttribute('role', 'status');
+    card.style.cssText = 'border:1px solid rgba(46,63,50,.3);border-radius:16px;padding:22px;margin:14px 0;background:rgba(157,179,156,.14)';
+    card.innerHTML = '<h3 style="margin:0 0 8px;font-size:20px">Application received.</h3>' +
+      '<p style="margin:0">Check your email. Your answer is on its way, usually within minutes. The email is titled <b>Your scholarship is approved</b>. Look in your spam folder too.</p>';
+    sch.parentNode.insertBefore(card, sch);
+    sch.hidden = true;
+    var btn = document.getElementById('payBtn'); if (btn) btn.hidden = true;
+    var fine = document.getElementById('fineTxt'); if (fine) fine.hidden = true;
+    var note = document.getElementById('preview'); if (note) note.hidden = true;
+    card.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+  function clearCard() {
+    var card = document.getElementById('wop-sch-done');
+    if (!card) return;
+    card.remove();
+    var btn = document.getElementById('payBtn'); if (btn) btn.hidden = false;
+    var fine = document.getElementById('fineTxt'); if (fine) fine.hidden = false;
+  }
+  function watch() {
+    if (!('MutationObserver' in window)) return;
+    var note = document.getElementById('preview');
+    if (note) new MutationObserver(function () {
+      fixFine();
+      var t = note.textContent || '';
+      if (t.indexOf('Application received') === 0) confirmCard();
+    }).observe(note, { childList: true, characterData: true, subtree: true });
+    var fine = document.getElementById('fineTxt');
+    if (fine) new MutationObserver(fixFine).observe(fine, { childList: true, characterData: true, subtree: true });
+    var s = document.getElementById('slider');
+    if (s) s.addEventListener('input', clearCard);
+    fixFine();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+})();
