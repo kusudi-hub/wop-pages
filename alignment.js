@@ -625,3 +625,26 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
   addEventListener('load', watch);
 })();
+
+/* Slider floor (Nov 23): no "Free" spot on the slider. Sliding all the way down stops at $5.11.
+   The only way into a scholarship is the "Need a free scholarship?" link, which still works
+   because it sets the slider in code, not by sliding. */
+(function () {
+  if (window.__wopFloor) return; window.__wopFloor = true;
+  var st = document.createElement('style');
+  st.textContent = '.alignment-page #stops .stop.free{display:none!important}';
+  (document.head || document.documentElement).appendChild(st);
+  function floorPos(s) {
+    var stop = [].filter.call(document.querySelectorAll('#stops .stop'), function (b) { return b.textContent.trim() === '$5.11'; })[0];
+    var m = stop && /calc\(\s*([0-9.]+)%/.exec(stop.style.left || '');
+    var max = parseFloat(s.max) || 1000;
+    return m ? Math.round(parseFloat(m[1]) / 100 * max) : Math.round(0.11 * max);
+  }
+  // Runs before the page's own slider handler (capture phase), so the page only ever sees $5.11 or more
+  window.addEventListener('input', function (e) {
+    var s = e.target;
+    if (!s || s.id !== 'slider') return;
+    var f = floorPos(s);
+    if (parseInt(s.value, 10) < f) s.value = f;
+  }, true);
+})();
