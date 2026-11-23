@@ -626,25 +626,50 @@
   addEventListener('load', watch);
 })();
 
-/* Slider floor (Nov 23): no "Free" spot on the slider. Sliding all the way down stops at $5.11.
-   The only way into a scholarship is the "Need a free scholarship?" link, which still works
-   because it sets the slider in code, not by sliding. */
+/* Slider (Nov 23): no "Free" spot. $5.11 sits at the far left, $51.10 in the middle, $511 at the far right.
+   The page's slider runs 0 to 1000 with 0 to 110 meaning Free. This sets its minimum to 110 and moves the
+   labels, the $51.10 mark and the filled part of the track to match. The "Need a free scholarship?" link
+   still works: it lowers the minimum for a moment so the page can switch to the scholarship, then puts it back. */
 (function () {
   if (window.__wopFloor) return; window.__wopFloor = true;
+  var MIN = 110, MAX = 1000;
   var st = document.createElement('style');
   st.textContent = '.alignment-page #stops .stop.free{display:none!important}';
   (document.head || document.documentElement).appendChild(st);
-  function floorPos(s) {
-    var stop = [].filter.call(document.querySelectorAll('#stops .stop'), function (b) { return b.textContent.trim() === '$5.11'; })[0];
-    var m = stop && /calc\(\s*([0-9.]+)%/.exec(stop.style.left || '');
-    var max = parseFloat(s.max) || 1000;
-    return m ? Math.round(parseFloat(m[1]) / 100 * max) : Math.round(0.11 * max);
+  function frac(p) { return Math.min(1, Math.max(0, (p - MIN) / (MAX - MIN))); }
+  function at(p) { return 'calc(11px + (100% - 22px) * ' + frac(p).toFixed(4) + ')'; }
+  function origP(el) {
+    if (el.dataset.wopP) return +el.dataset.wopP;
+    var m = /(-?[0-9.]+)%/.exec(el.style.left || '');
+    if (!m) return null;
+    var p = Math.round(parseFloat(m[1]) * 10);
+    el.dataset.wopP = p; return p;
   }
-  // Runs before the page's own slider handler (capture phase), so the page only ever sees $5.11 or more
-  window.addEventListener('input', function (e) {
-    var s = e.target;
-    if (!s || s.id !== 'slider') return;
-    var f = floorPos(s);
-    if (parseInt(s.value, 10) < f) s.value = f;
-  }, true);
+  function placeStops() {
+    var els = [].slice.call(document.querySelectorAll('#stops .stop'));
+    var mark = document.getElementById('mark'); if (mark) els.push(mark);
+    els.forEach(function (el) { var p = origP(el); if (p == null || (el.dataset.wopL && el.style.left === el.dataset.wopL)) return; el.style.left = at(p); el.dataset.wopL = el.style.left; });
+  }
+  function fill(s) {
+    var want = (frac(parseInt(s.value, 10) || 0) * 100).toFixed(2) + '%';
+    if (s.style.getPropertyValue('--fill') !== want) s.style.setProperty('--fill', want);
+  }
+  function setup() {
+    var s = document.getElementById('slider');
+    if (!s || s.__wopFloor) return !!s; s.__wopFloor = true;
+    s.min = MIN; if (parseInt(s.value, 10) < MIN) s.value = MIN;
+    placeStops(); fill(s);
+    new MutationObserver(function () { fill(s); }).observe(s, { attributes: true, attributeFilter: ['style'] });
+    var stops = document.getElementById('stops');
+    if (stops) new MutationObserver(placeStops).observe(stops, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+    var link = document.getElementById('scholarLink');
+    if (link) link.addEventListener('click', function () {
+      s.min = 0;
+      setTimeout(function () { s.min = MIN; fill(s); }, 0);
+    }, true);
+    return true;
+  }
+  if (!setup()) {
+    document.addEventListener('DOMContentLoaded', setup); addEventListener('load', setup);
+  }
 })();
