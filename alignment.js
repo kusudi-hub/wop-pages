@@ -545,3 +545,83 @@
     if (t && t.id === 'email' && t.value && t.value.indexOf('@') > 0) lsSet('al_paystart', { t: Date.now(), email: t.value });
   }, true);
 })();
+
+/* Scholarship check (Nov 23): the moment someone picks the free scholarship (the link, the Free stop,
+   or sliding to the bottom), a box asks first. "I can do $5.11" puts the slider on $5.11.
+   "I truly can't right now" opens the scholarship questions. Closing the box counts as $5.11. */
+(function () {
+  if (window.__wopSchCheck) return; window.__wopSchCheck = true;
+  var IMG = 'https://kusudi-hub.github.io/wop-pages/media/god-is-watching.jpg';
+  var passed = false, open = false, box = null;
+  try { var pre = new Image(); pre.src = IMG; } catch (e) {}
+  var css = document.createElement('style');
+  css.textContent =
+    '.wop-schk{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(17,25,19,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:wopSchkIn .2s ease-out}' +
+    '.wop-schk[hidden]{display:none}' +
+    '.wop-schk-card{position:relative;width:100%;max-width:420px;max-height:calc(100vh - 32px);overflow:auto;background:#1F2B22;color:#F7F5F1;border-radius:22px;padding:22px 22px 20px;text-align:center;box-shadow:0 40px 80px -30px rgba(0,0,0,.7);animation:wopSchkUp .28s cubic-bezier(.2,.75,.2,1)}' +
+    '.wop-schk-card img{display:block;width:100%;max-width:240px;aspect-ratio:1;object-fit:cover;margin:0 auto 16px;border-radius:16px;background:#F7F7F7}' +
+    '.wop-schk-card h3{font-family:var(--display,"Alfa Slab One",Georgia,serif);font-weight:400;font-size:22px;line-height:1.25;margin:0 0 10px;color:#F7F5F1}' +
+    '.wop-schk-card p{font-family:var(--body,"Source Serif 4",Georgia,serif);font-size:16px;line-height:1.5;color:#D9E2D8;margin:0 0 18px}' +
+    '.wop-schk-card .wop-schk-btns{display:grid;gap:10px}' +
+    '.wop-schk-card button.wb{font-family:var(--ui,"DM Sans",system-ui,sans-serif);font-size:16px;font-weight:600;border-radius:999px;padding:14px 18px;cursor:pointer;border:0}' +
+    '.wop-schk-card .wb-yes{background:#F7F5F1;color:#1C2A20}' +
+    '.wop-schk-card .wb-no{background:transparent;color:#F7F5F1;box-shadow:inset 0 0 0 1.5px rgba(157,179,156,.6)}' +
+    '.wop-schk-card button.wb:focus-visible,.wop-schk-x:focus-visible{outline:3px solid #9DB39C;outline-offset:3px}' +
+    '.wop-schk-card .wop-schk-foot{font-family:var(--ui,"DM Sans",system-ui,sans-serif);font-size:14px;color:#9DB39C;margin:14px 0 0}' +
+    '.wop-schk-x{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(247,245,241,.12);color:#F7F5F1;font-size:20px;line-height:1;cursor:pointer}' +
+    '@keyframes wopSchkIn{from{opacity:0}to{opacity:1}}@keyframes wopSchkUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}' +
+    '@media (prefers-reduced-motion:reduce){.wop-schk,.wop-schk-card{animation:none}}';
+  function build() {
+    if (box) return box;
+    document.head.appendChild(css);
+    box = document.createElement('div');
+    box.className = 'wop-schk'; box.hidden = true;
+    box.innerHTML =
+      '<div class="wop-schk-card" role="dialog" aria-modal="true" aria-labelledby="wopSchkH">' +
+        '<button type="button" class="wop-schk-x" aria-label="Close">×</button>' +
+        '<img src="' + IMG + '" alt="I\'m watching you" width="240" height="240">' +
+        '<h3 id="wopSchkH">Please don\'t take this just because it\'s free. God is watching 👀</h3>' +
+        '<p>Scholarships are for people who really can\'t afford $5.11 a month right now. Members who give more pay for these seats.</p>' +
+        '<div class="wop-schk-btns"><button type="button" class="wb wb-yes">I can do $5.11</button><button type="button" class="wb wb-no">I truly can\'t right now</button></div>' +
+        '<p class="wop-schk-foot">Remember, God is watching 👀</p>' +
+      '</div>';
+    document.body.appendChild(box);
+    box.querySelector('.wb-yes').addEventListener('click', canPay);
+    box.querySelector('.wb-no').addEventListener('click', cannotPay);
+    box.querySelector('.wop-schk-x').addEventListener('click', canPay);
+    box.addEventListener('click', function (e) { if (e.target === box) canPay(); });
+    document.addEventListener('keydown', function (e) { if (open && e.key === 'Escape') canPay(); });
+    return box;
+  }
+  function show() {
+    build(); open = true; box.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    setTimeout(function () { var b = box.querySelector('.wb-yes'); if (b) b.focus(); }, 50);
+  }
+  function hide() {
+    open = false; if (box) box.hidden = true;
+    document.documentElement.style.overflow = '';
+  }
+  function canPay() {
+    hide();
+    var stop = [].filter.call(document.querySelectorAll('#stops .stop'), function (b) { return b.textContent.trim() === '$5.11'; })[0];
+    if (stop) stop.click();
+    var s = document.getElementById('slider'); if (s) s.dispatchEvent(new Event('input', { bubbles: true }));
+    var amt = document.getElementById('amt'); if (amt) amt.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+  function cannotPay() {
+    passed = true; hide();
+    var sch = document.getElementById('scholar'); if (sch) sch.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+  function watch() {
+    var form = document.getElementById('payForm');
+    if (!form || form.__wopSchk) return; form.__wopSchk = true;
+    new MutationObserver(function () {
+      var free = form.classList.contains('is-free');
+      if (free && !passed && !open) show();
+      if (!free && open) hide();
+    }).observe(form, { attributes: true, attributeFilter: ['class'] });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+  addEventListener('load', watch);
+})();
