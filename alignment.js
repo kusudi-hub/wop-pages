@@ -673,3 +673,16 @@
     document.addEventListener('DOMContentLoaded', setup); addEventListener('load', setup);
   }
 })();
+
+/* Tab icon and title (Nov 24): the World of Purpose mark instead of the GoHighLevel default icon,
+   and a real tab title. The same icon URL is set in the GoHighLevel funnel settings too. */
+(function () {
+  if (window.__wopIcon) return; window.__wopIcon = true;
+  var BASE = 'https://kusudi-hub.github.io/wop-pages/icons/';
+  var head = document.head || document.documentElement;
+  [].forEach.call(document.querySelectorAll('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]'), function (l) { l.parentNode.removeChild(l); });
+  [['icon', 'image/svg+xml', 'icon.svg', ''], ['icon', 'image/png', 'favicon-32.png', '32x32'], ['apple-touch-icon', '', 'apple-touch-icon.png', '180x180']].forEach(function (d) {
+    var l = document.createElement('link'); l.rel = d[0]; if (d[1]) l.type = d[1]; if (d[3]) l.sizes = d[3]; l.href = BASE + d[2]; head.appendChild(l);
+  });
+  if (!document.title || !document.title.trim()) document.title = 'Alignment | World of Purpose';
+})();
