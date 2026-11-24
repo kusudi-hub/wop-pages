@@ -572,7 +572,7 @@ $("#declare-form").addEventListener("submit", ev => {
   ev.preventDefault();
   const f = new FormData(ev.target), err = $("[data-err]");
   const purpose = clean(f.get("purpose")), name = (f.get("name")||"").trim(), email = (f.get("email")||"").trim(), phone = (f.get("phone")||"").trim();
-  if (!purpose || !name || !/^\S+@\S+\.\S+$/.test(email) || phone.replace(/\D/g,"").length < 7){ err.hidden = false; err.textContent = !purpose ? "Write your purpose in the first box. One sentence is enough." : !name ? "Add your name so we can count you." : !/^\S+@\S+\.\S+$/.test(email) ? "Add an email we can reach you at." : "Add a phone number we can reach you at."; return; }
+  if (!purpose || !name || !/^\S+@\S+\.\S+$/.test(email) || phone.replace(/\D/g,"").length < 7){ err.hidden = false; err.textContent = !purpose ? "Write your purpose in the first box. One sentence is enough." : !name ? "Add your name so we can count you." : !/^\S+@\S+\.\S+$/.test(email) ? "Add an email we can reach you at." : "Add a complete phone number."; return; }
   err.hidden = true;
   const t = (f.get("city")||"").trim().toLowerCase();
   const near = t && AGG.places.find(p => p.city && p.lat != null && t.includes(p.city.toLowerCase()));
