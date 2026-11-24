@@ -629,7 +629,8 @@
 /* Slider (Nov 23): no "Free" spot. $5.11 sits at the far left, $51.10 in the middle, $511 at the far right.
    The page's slider runs 0 to 1000 with 0 to 110 meaning Free. This sets its minimum to 110 and moves the
    labels, the $51.10 mark and the filled part of the track to match. The "Need a free scholarship?" link
-   still works: it lowers the minimum for a moment so the page can switch to the scholarship, then puts it back. */
+   still works: it lowers the minimum so the page can switch to the scholarship, and the minimum comes back
+   only when the person moves the slider again. */
 (function () {
   if (window.__wopFloor) return; window.__wopFloor = true;
   var MIN = 110, MAX = 1000;
@@ -662,11 +663,25 @@
     new MutationObserver(function () { fill(s); }).observe(s, { attributes: true, attributeFilter: ['style'] });
     var stops = document.getElementById('stops');
     if (stops) new MutationObserver(placeStops).observe(stops, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
-    var link = document.getElementById('scholarLink');
-    if (link) link.addEventListener('click', function () {
-      s.min = 0;
-      setTimeout(function () { s.min = MIN; fill(s); }, 0);
-    }, true);
+    /* Fix (Nov 24): the scholarship links set the slider to 0 (Free). Putting the minimum straight back to
+       110 made the browser move the value up to 110, which the page reads as $5.11, so a submitted
+       scholarship form opened the card form instead of applying. Now the minimum stays at 0 while the
+       scholarship is open, and goes back to 110 only when the person touches the slider themselves. */
+    function toFree() { s.min = 0; }
+    ['scholarLink', 'heroScholar'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && !el.__wopFree) { el.__wopFree = true; el.addEventListener('click', toFree, true); }
+    });
+    function backToFloor() {
+      if (s.min === String(MIN)) return;
+      s.min = MIN;
+      if (parseInt(s.value, 10) < MIN) s.value = MIN;
+      fill(s);
+      s.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    s.addEventListener('pointerdown', backToFloor, true);
+    s.addEventListener('touchstart', backToFloor, true);
+    s.addEventListener('keydown', backToFloor, true);
     return true;
   }
   if (!setup()) {
