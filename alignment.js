@@ -685,4 +685,13 @@
     var l = document.createElement('link'); l.rel = d[0]; if (d[1]) l.type = d[1]; if (d[3]) l.sizes = d[3]; l.href = BASE + d[2]; head.appendChild(l);
   });
   if (!document.title || !document.title.trim()) document.title = 'Alignment | World of Purpose';
+  // The page framework adds its default icon back after load; take it out whenever it shows up
+  function dropDefault() {
+    [].forEach.call(document.querySelectorAll('link[rel~="icon"],link[rel="shortcut icon"]'), function (l) {
+      if (l.href.indexOf(BASE) !== 0) l.parentNode.removeChild(l);
+    });
+    if (!document.title || !document.title.trim()) document.title = 'Alignment | World of Purpose';
+  }
+  dropDefault();
+  new MutationObserver(dropDefault).observe(head, { childList: true });
 })();
