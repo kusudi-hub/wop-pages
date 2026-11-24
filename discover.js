@@ -1,6 +1,14 @@
 /* World of Purpose · Discover My Purpose page. Built from the live page; it renders inside #wop-root. */
 (function(){
   if (window.__wopMounted) return; window.__wopMounted = true;
+  // Tab title and icon (the icon is also set in the GoHighLevel funnel settings)
+  try {
+    if (!document.title || !document.title.trim()) document.title = "Discover My Purpose | World of Purpose";
+    if (!document.querySelector('link[rel~="icon"][href*="kusudi-hub.github.io"]')) {
+      var wopIco = document.createElement("link"); wopIco.rel = "icon"; wopIco.type = "image/svg+xml";
+      wopIco.href = "https://kusudi-hub.github.io/wop-pages/icons/icon.svg"; (document.head || document.documentElement).appendChild(wopIco);
+    }
+  } catch (e) {}
   try { document.documentElement.style.background = "#FFFFFF"; if (document.body) document.body.style.background = "#FFFFFF"; else document.addEventListener("DOMContentLoaded", function(){ document.body.style.background = "#FFFFFF"; }); } catch(e){}
   var me = document.currentScript, BASE = me && me.src ? me.src.replace(/[^\/]*$/, "") : "https://kusudi-hub.github.io/wop-pages/";
   var FONTS = "https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Noto+Color+Emoji&display=swap";
